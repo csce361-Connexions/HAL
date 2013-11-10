@@ -7,7 +7,7 @@ namespace MvcMovie.Migrations
     {
         public override void Up()
         {
-            AddColumn("dbo.Movies", "Rating", c => c.String());
+            //AddColumn("dbo.Movies", "Rating", c => c.String());
         }
         
         public override void Down()
