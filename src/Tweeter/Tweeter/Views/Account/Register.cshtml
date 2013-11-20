@@ -24,6 +24,14 @@
                 @Html.EditorFor(m => m.emailAddress)
             </li>
             <li>
+                @Html.LabelFor(m => m.firstName)
+                        @Html.TextBoxFor(m => m.firstName)
+                            </li>
+            <li>
+                @Html.LabelFor(m => m.lastName)
+                        @Html.TextBoxFor(m => m.lastName)
+                            </li>
+            <li>
                 @Html.LabelFor(m => m.Password)
                 @Html.PasswordFor(m => m.Password)
             </li>
@@ -31,6 +39,7 @@
                 @Html.LabelFor(m => m.ConfirmPassword)
                 @Html.PasswordFor(m => m.ConfirmPassword)
             </li>
+
         </ol>
         <input type="submit" value="Register" />
     </fieldset>

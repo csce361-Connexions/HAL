@@ -25,6 +25,10 @@ namespace Tweeter.Models
         [DatabaseGeneratedAttribute(DatabaseGeneratedOption.Identity)]
         public int UserId { get; set; }
         public string UserName { get; set; }
+
+        public string emailAddress { get; set; }
+        public string firstName { get; set; }
+        public string lastName { get; set; }
     }
 
     public class RegisterExternalLoginModel
@@ -92,6 +96,13 @@ namespace Tweeter.Models
         [Display(Name = "Email Address")]
         public string emailAddress { get; set; }
 
+        [Required]
+        [Display(Name = "First Name")]
+        public string firstName { get; set; }
+
+        [Required]
+        [Display(Name = "Last Name")]
+        public string lastName { get; set; }
     }
 
     public class ExternalLogin

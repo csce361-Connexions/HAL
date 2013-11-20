@@ -79,8 +79,13 @@ namespace Tweeter.Controllers
                 // Attempt to register the user
                 try
                 {
+                    UserProfilesContext db = new UserProfilesContext();
                     WebSecurity.CreateUserAndAccount(model.UserName, model.Password);
                     WebSecurity.Login(model.UserName, model.Password);
+                    //Set the first name, last name, and email of the newly created user profile
+                    UserProfile newUser = db.UserProfiles.Where(u => u.UserName == model.UserName).FirstOrDefault();
+					db.Entry(newUser).CurrentValues.SetValues(new UserProfile { UserId = newUser.UserId, UserName=model.UserName , emailAddress=model.emailAddress, firstName=model.firstName, lastName=model.lastName});
+                    db.SaveChanges();
                     return RedirectToAction("Index", "Home");
                 }
                 catch (MembershipCreateUserException e)
