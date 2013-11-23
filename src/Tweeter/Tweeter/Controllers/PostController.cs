@@ -6,6 +6,8 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using Tweeter.Models;
+using System.Web.Security;
+using WebMatrix.WebData;
 
 namespace Tweeter.Controllers
 {
@@ -51,6 +53,9 @@ namespace Tweeter.Controllers
         {
             if (ModelState.IsValid)
             {
+                //post.user = User.Identity.Name;
+                //post.user.UserName = User.Identity.Name;
+                //post.user.UserId = WebSecurity.GetUserId(User.Identity.Name);
                 db.Posts.Add(post);
                 db.SaveChanges();
                 return RedirectToAction("Index");
