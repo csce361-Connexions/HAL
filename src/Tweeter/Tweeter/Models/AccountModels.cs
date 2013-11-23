@@ -29,6 +29,8 @@ namespace Tweeter.Models
         public string emailAddress { get; set; }
         public string firstName { get; set; }
         public string lastName { get; set; }
+
+        public string verification { get; set; }
     }
 
     public class RegisterExternalLoginModel

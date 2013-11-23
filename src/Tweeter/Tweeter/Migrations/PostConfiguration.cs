@@ -5,9 +5,9 @@ namespace Tweeter.Migrations
     using System.Data.Entity.Migrations;
     using System.Linq;
 
-    internal sealed class Configuration : DbMigrationsConfiguration<Tweeter.Models.PostContext>
+    internal sealed class PostConfiguration : DbMigrationsConfiguration<Tweeter.Models.PostContext>
     {
-        public Configuration()
+        public PostConfiguration()
         {
             AutomaticMigrationsEnabled = true;
             AutomaticMigrationDataLossAllowed = true;

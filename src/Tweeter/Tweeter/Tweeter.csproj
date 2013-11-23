@@ -192,7 +192,8 @@
     <Compile Include="Migrations\201311192313458_InitialMigration.Designer.cs">
       <DependentUpon>201311192313458_InitialMigration.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\Configuration.cs" />
+    <Compile Include="Migrations\UserProfilesConfiguration.cs" />
+    <Compile Include="Migrations\PostConfiguration.cs" />
     <Compile Include="Models\AccountModels.cs" />
     <Compile Include="Models\Post.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
