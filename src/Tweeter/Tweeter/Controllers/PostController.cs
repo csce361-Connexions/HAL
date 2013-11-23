@@ -51,6 +51,9 @@ namespace Tweeter.Controllers
         {
             if (ModelState.IsValid)
             {
+                //post.user = User.Identity.Name;
+                post.user.UserName = User.Identity.Name;
+                post.user.UserId = 1; //TODO: fix to link to user identity name!
                 db.Posts.Add(post);
                 db.SaveChanges();
                 return RedirectToAction("Index");

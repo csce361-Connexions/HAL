@@ -18,13 +18,15 @@ namespace Tweeter.Models
     [Table("Posts")]
     public class Post
     {
+        [Key]
+        [DatabaseGeneratedAttribute(DatabaseGeneratedOption.Identity)]
         public int Id {get; set;}
         [StringLength(200)]
         public string postContent{get; set;}
 
         [Required]
         public virtual UserProfile user{get;set;}
-
+        //public string user { get; set; }
 
     }
 }
