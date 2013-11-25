@@ -109,6 +109,7 @@ namespace Tweeter.Controllers
 
 					db.Entry(newUser).State = System.Data.EntityState.Modified;
                     db.SaveChanges();
+                    TempData["message"] = "Check your email to finish creating your account.";
                     return RedirectToAction("Index", "Home");
                 }
                 catch (MembershipCreateUserException e)
@@ -132,7 +133,8 @@ namespace Tweeter.Controllers
             user.verification = null;
             db.Entry(user).State = System.Data.EntityState.Modified;
             db.SaveChanges();
-            return null;
+            TempData["message"] = "Your account has successfully been verified!";
+            return RedirectToAction("Login");
         }
 
         //
