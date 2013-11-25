@@ -51,9 +51,14 @@ namespace Tweeter.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create(Post post)
         {
+            post.user = new UserProfile();
+            //post.user.UserName = "alex";
+            //post.user.UserId = 12;
+            post.user.UserName = User.Identity.Name;
+            post.user.UserId = WebSecurity.GetUserId(User.Identity.Name);//TODO: need to call a WebSecurity function before this...
+
             if (ModelState.IsValid)
             {
-                //post.user = User.Identity.Name;
                 //post.user.UserName = User.Identity.Name;
                 //post.user.UserId = WebSecurity.GetUserId(User.Identity.Name);
                 db.Posts.Add(post);
