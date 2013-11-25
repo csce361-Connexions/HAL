@@ -10,6 +10,8 @@ using Microsoft.Web.WebPages.OAuth;
 using WebMatrix.WebData;
 using Tweeter.Filters;
 using Tweeter.Models;
+using System.Net.Mail;
+using System.Net;
 
 namespace Tweeter.Controllers
 {
@@ -35,11 +37,24 @@ namespace Tweeter.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Login(LoginModel model, string returnUrl)
         {
-            if (ModelState.IsValid && WebSecurity.Login(model.UserName, model.Password, persistCookie: model.RememberMe))
+            //first check if the user has verified via email
+            UserProfilesContext db = new UserProfilesContext();
+            UserProfile user = db.UserProfiles.Where(u => u.UserName == model.UserName).FirstOrDefault();
+            if (user.verification == null)
             {
-                return RedirectToLocal(returnUrl);
-            }
 
+
+                if (ModelState.IsValid && WebSecurity.Login(model.UserName, model.Password, persistCookie: model.RememberMe))
+                {
+                    return RedirectToLocal(returnUrl);
+                }
+            }
+            else
+            {
+                //The user hasnt yet verfied via email
+                ModelState.AddModelError("", "Your account has not yet been verified!");
+                return View(model);
+            }
             // If we got this far, something failed, redisplay form
             ModelState.AddModelError("", "The user name or password provided is incorrect.");
             return View(model);
@@ -81,10 +96,18 @@ namespace Tweeter.Controllers
                 {
                     UserProfilesContext db = new UserProfilesContext();
                     WebSecurity.CreateUserAndAccount(model.UserName, model.Password);
-                    WebSecurity.Login(model.UserName, model.Password);
+                    //WebSecurity.Login(model.UserName, model.Password);
                     //Set the first name, last name, and email of the newly created user profile
                     UserProfile newUser = db.UserProfiles.Where(u => u.UserName == model.UserName).FirstOrDefault();
-					db.Entry(newUser).CurrentValues.SetValues(new UserProfile { UserId = newUser.UserId, UserName=model.UserName , emailAddress=model.emailAddress, firstName=model.firstName, lastName=model.lastName});
+                    string guid = Guid.NewGuid().ToString();
+                    newUser.UserName = model.UserName;
+                    newUser.emailAddress = model.emailAddress;
+                    newUser.firstName = model.firstName;
+                    newUser.lastName = model.lastName;
+                    newUser.verification = guid;
+                    sendVerificationEmail(newUser);
+
+					db.Entry(newUser).State = System.Data.EntityState.Modified;
                     db.SaveChanges();
                     return RedirectToAction("Index", "Home");
                 }
@@ -96,6 +119,20 @@ namespace Tweeter.Controllers
 
             // If we got this far, something failed, redisplay form
             return View(model);
+        }
+
+        //
+        // GET: /Account/Verify
+        [AllowAnonymous]
+        public ActionResult Verify(string guid)
+        {
+            //get the user with the given guid
+            UserProfilesContext db = new UserProfilesContext();
+            UserProfile user = db.UserProfiles.Where(u => u.verification == guid).FirstOrDefault();
+            user.verification = null;
+            db.Entry(user).State = System.Data.EntityState.Modified;
+            db.SaveChanges();
+            return null;
         }
 
         //
@@ -334,6 +371,24 @@ namespace Tweeter.Controllers
         }
 
         #region Helpers
+        private void sendVerificationEmail(UserProfile recipient)
+        {
+            
+            string url = string.Format("http://{0}/Account/Verify?guid={1}", Request.Url.Authority, recipient.verification);
+            string body = string.Format("Welcome to Tweeter! To verify your new account, follow <a href=\"{0}\">this link</a>.", url);
+            //Send email
+            MailAddress from = new MailAddress("tmcclenahan0@gmail.com", "Tweeter");
+            MailAddress to = new MailAddress(recipient.emailAddress);
+            MailMessage mailMessage = new MailMessage(from, to);
+            mailMessage.Body = body;
+
+            mailMessage.IsBodyHtml = true;
+            mailMessage.Subject = "Verify your new Tweeter account";
+
+            SmtpClient client = new SmtpClient();
+            //client.UseDefaultCredentials = false;
+            client.Send(mailMessage);
+        }
         private ActionResult RedirectToLocal(string returnUrl)
         {
             if (Url.IsLocalUrl(returnUrl))
