@@ -123,6 +123,44 @@ namespace Tweeter.Controllers
         }
 
         //
+        //GET: /Account/CheckUserName
+        [AllowAnonymous]
+        public JsonResult CheckUserName(string username, string firstname="", string lastname="")
+        {
+            //Check if the username exists in the database
+            UserProfilesContext db = new UserProfilesContext();
+            UserProfile existing = db.UserProfiles.Where(u => u.UserName == username).FirstOrDefault();
+            //if it does not, return nothing
+            List<string> suggestions = new List<string>();
+            if (existing != null)
+            {         
+                //Check first_last
+                string firstLast = existing.firstName +"_"+ existing.lastName;
+                bool taken = (from u in db.UserProfiles where u.UserName == firstLast select u).Count() > 0;
+                if (!taken)
+                {
+                    suggestions.Add(firstLast);
+                }
+                int i = 1;
+                while (suggestions.Count < 3)
+                {
+                    //Count up with the username until there are three suggestions
+                    string altName = existing.UserName + i;
+                    bool altTaken = (from u in db.UserProfiles where u.UserName == altName select u).Count() > 0;
+                    if (!taken)
+                    {
+                        suggestions.Add(altName);
+                    }
+                    i++;
+                }
+                
+            }
+
+
+            return Json(new { suggestions = suggestions }, JsonRequestBehavior.AllowGet); 
+        }
+
+        //
         // GET: /Account/Verify
         [AllowAnonymous]
         public ActionResult Verify(string guid)
