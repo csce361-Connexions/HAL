@@ -135,11 +135,13 @@ namespace Tweeter.Controllers
             if (existing != null)
             {         
                 //Check first_last
-                string firstLast = existing.firstName +"_"+ existing.lastName;
+                if(firstname!="" && lastname!=""){
+                string firstLast = firstname +"_"+ lastname;
                 bool taken = (from u in db.UserProfiles where u.UserName == firstLast select u).Count() > 0;
                 if (!taken)
                 {
                     suggestions.Add(firstLast);
+                }
                 }
                 int i = 1;
                 while (suggestions.Count < 3)
@@ -147,7 +149,7 @@ namespace Tweeter.Controllers
                     //Count up with the username until there are three suggestions
                     string altName = existing.UserName + i;
                     bool altTaken = (from u in db.UserProfiles where u.UserName == altName select u).Count() > 0;
-                    if (!taken)
+                    if (!altTaken)
                     {
                         suggestions.Add(altName);
                     }

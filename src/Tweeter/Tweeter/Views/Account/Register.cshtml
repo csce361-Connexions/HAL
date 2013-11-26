@@ -18,6 +18,7 @@
             <li>
                 @Html.LabelFor(m => m.UserName)
                 @Html.TextBoxFor(m => m.UserName)
+                <span id="suggestions"></span>
             </li>
             <li>
                 @Html.LabelFor(m => m.emailAddress)
@@ -50,5 +51,23 @@
 }
 
 <script type="text/javascript">
-    $("#Password").passStrengthify()
+    $("#Password").passStrengthify();
+    $("input#UserName").on('input', function () {
+        //send the username, first, and last to the server
+        var username = $("input#UserName").val();
+        var firstname = $("input#firstName").val();
+        var lastname = $("input#lastName").val();
+        var data = {username:username};
+        if(firstname != "") data.firstname = firstname;
+        if(lastname != "") data.lastname = lastname;
+        $.getJSON("/Account/CheckUserName", data, function (resp) {
+            //do some stuff here
+            if (resp.suggestions.length > 1) {
+                $("span#suggestions").empty().append("User name already taken. Try one of these: ").append(resp.suggestions.join());
+            } else {
+                $("span#suggestions").empty();
+            }
+            
+        });
+    });
 </script>
