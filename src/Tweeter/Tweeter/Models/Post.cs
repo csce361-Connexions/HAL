@@ -22,7 +22,6 @@ namespace Tweeter.Models
         [StringLength(200)]
         public string postContent{get; set;}
 
-        [Required]
         public virtual UserProfile user { get; set; }
 
 

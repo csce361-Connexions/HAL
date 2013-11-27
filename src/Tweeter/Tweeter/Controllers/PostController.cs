@@ -41,7 +41,15 @@ namespace Tweeter.Controllers
 
         public ActionResult Create()
         {
-            return View();
+            if (WebSecurity.IsAuthenticated)
+            {
+                return View();
+            }
+            else
+            {
+                return RedirectToAction("Login","Account");
+            }
+            
         }
 
         //
@@ -51,16 +59,13 @@ namespace Tweeter.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create(Post post)
         {
-            post.user = new UserProfile();
-            //post.user.UserName = "alex";
-            //post.user.UserId = 12;
-            post.user.UserName = User.Identity.Name;
-            post.user.UserId = WebSecurity.GetUserId(User.Identity.Name);//TODO: need to call a WebSecurity function before this...
-
+            int asfd = WebSecurity.CurrentUserId;
+            //get the current user
+            UserProfilesContext userDb = new UserProfilesContext();
+            UserProfile user = (from u in userDb.UserProfiles where u.UserId == WebSecurity.CurrentUserId select u).FirstOrDefault();
             if (ModelState.IsValid)
             {
-                //post.user.UserName = User.Identity.Name;
-                //post.user.UserId = WebSecurity.GetUserId(User.Identity.Name);
+                post.user = user;
                 db.Posts.Add(post);
                 db.SaveChanges();
                 return RedirectToAction("Index");
