@@ -19,12 +19,16 @@
 {
     <tr>
         <td>
-            @Html.DisplayFor(modelItem => item.postContent)
+            Text:
+            @Html.DisplayFor(modelItem => item.postContent) <br>
+            Number of likes: 
+            @Html.DisplayFor(modelItem => item.numLikes)<br>
         </td>
         <td>
-            @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
-            @Html.ActionLink("Details", "Details", new { id = item.Id }) |
-            @Html.ActionLink("Delete", "Delete", new { id = item.Id })
+            @Html.ActionLink("Edit", "Edit", "Post", new { id = item.Id }, null) |
+            @Html.ActionLink("Details", "Details", "Post", new { id = item.Id }, null) |
+            @Html.ActionLink("Delete", "Delete", "Post", new { id = item.Id }, null) |
+            @Html.ActionLink("Like", "Like", "Post", new { id = item.Id }, null) <br><br>
         </td>
     </tr>
 }

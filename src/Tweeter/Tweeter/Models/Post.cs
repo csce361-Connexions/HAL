@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Data.Entity;
 using System.Globalization;
+using Tweeter.Models;
 
 namespace Tweeter.Models
 {
@@ -24,7 +25,11 @@ namespace Tweeter.Models
 
         public virtual UserProfile user { get; set; }
 
+        public List<int> likerIDs { get; set; }
 
+        public int numLikes { get; set; }
+
+        public List<int> followers { get; set; }
 
 
     }

@@ -24,6 +24,48 @@ namespace Tweeter.Controllers
         }
 
         //
+        // POST: /Post/Like/5
+        public ActionResult Like(int id)
+        {
+            int currUid = WebSecurity.CurrentUserId;
+            //get the current user
+            UserProfilesContext userDb = new UserProfilesContext();
+            UserProfile user = new UserProfile();
+            user = (from u in userDb.UserProfiles where u.UserId == WebSecurity.CurrentUserId select u).FirstOrDefault();
+            Post post = db.Posts.Find(id);
+            
+            //if the likers list is null, initialize it
+            if (post.likerIDs == null)
+            {
+                post.likerIDs = new List<int>();
+            }
+
+            //if the user has not already liked the post
+            if (ModelState.IsValid && !post.likerIDs.Contains(currUid))
+            {
+                post.numLikes++;
+                post.likerIDs.Add(currUid);
+                db.Entry(post).State = EntityState.Modified;
+                db.SaveChanges();
+                return RedirectToAction("Index", "Home", null);
+            }
+            return View();
+        }
+
+        //
+        // POST: /Post/Follow/5
+        public ActionResult Follow(Post post)
+        {
+            if (ModelState.IsValid)
+            {
+                db.Entry(post).State = EntityState.Modified;
+                db.SaveChanges();
+                return RedirectToAction("Index");
+            }
+            return View(post);
+        }
+
+        //
         // GET: /Post/Details/5
 
         public ActionResult Details(int id = 0)
@@ -66,6 +108,7 @@ namespace Tweeter.Controllers
             if (ModelState.IsValid)
             {
                 post.user = user;
+                post.likerIDs = new List<int>();
                 db.Posts.Add(post);
                 db.SaveChanges();
                 return RedirectToAction("Index");
