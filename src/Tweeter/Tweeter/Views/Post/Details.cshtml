@@ -16,6 +16,16 @@
         @Html.DisplayFor(model => model.postContent)
     </div>
 </fieldset>
+<fieldset>
+    <legend>Post2</legend>
+
+    <div class="display-label">
+        @Html.DisplayNameFor(model => model.likers)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.likers)
+    </div>
+</fieldset>
 <p>
     @Html.ActionLink("Edit", "Edit", new { id=Model.Id }) |
     @Html.ActionLink("Back to List", "Index")

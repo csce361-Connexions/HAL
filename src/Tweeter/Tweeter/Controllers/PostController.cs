@@ -35,34 +35,72 @@ namespace Tweeter.Controllers
             Post post = db.Posts.Find(id);
             
             //if the likers list is null, initialize it
-            if (post.likerIDs == null)
-            {
-                post.likerIDs = new List<int>();
-            }
+            //if (post.likers == null)
+            //{
+            //    post.likers = new ICollection<UserProfile>();
+            //}
 
             //if the user has not already liked the post
-            if (ModelState.IsValid && !post.likerIDs.Contains(currUid))
+            List<String> userNames = new List<String>();
+            foreach (UserProfile use in post.likers)
+            {
+                if(!userNames.Contains(use.UserName)){
+                    userNames.Add(use.UserName);
+                }
+            }
+
+            //if (ModelState.IsValid && !post.likers.Contains(user)) //This does not work because the users stored in the database do not have a unique ID
+            if (ModelState.IsValid && !userNames.Contains(user.UserName))
             {
                 post.numLikes++;
-                post.likerIDs.Add(currUid);
+                post.likers.Add(user);
                 db.Entry(post).State = EntityState.Modified;
                 db.SaveChanges();
-                return RedirectToAction("Index", "Home", null);
+                //return RedirectToAction("Index", "Home", null);
+                return Redirect(Request.UrlReferrer.ToString());
             }
-            return View();
+            //return View();
+            return Redirect(Request.UrlReferrer.ToString());
         }
 
         //
         // POST: /Post/Follow/5
-        public ActionResult Follow(Post post)
+        public ActionResult Follow(int id)
         {
-            if (ModelState.IsValid)
+            int currUid = WebSecurity.CurrentUserId;
+            //get the current user
+            UserProfilesContext userDb = new UserProfilesContext();
+            UserProfile user = new UserProfile();
+            user = (from u in userDb.UserProfiles where u.UserId == WebSecurity.CurrentUserId select u).FirstOrDefault();
+            Post post = db.Posts.Find(id);
+
+            //if the likers list is null, initialize it
+            //if (post.likers == null)
+            //{
+            //    post.likers = new ICollection<UserProfile>();
+            //}
+
+            //if the user has not already liked the post
+            List<String> userNames = new List<String>();
+            foreach (UserProfile use in post.followers)
             {
+                if (!userNames.Contains(use.UserName))
+                {
+                    userNames.Add(use.UserName);
+                }
+            }
+
+            //if (ModelState.IsValid && !post.likers.Contains(user)) //This does not work because the users stored in the database do not have a unique ID
+            if (ModelState.IsValid && !userNames.Contains(user.UserName))
+            {
+                post.followers.Add(user);
                 db.Entry(post).State = EntityState.Modified;
                 db.SaveChanges();
-                return RedirectToAction("Index");
+                //return RedirectToAction("Index", "Home", null);
+                return Redirect(Request.UrlReferrer.ToString());
             }
-            return View(post);
+            //return View();
+            return Redirect(Request.UrlReferrer.ToString());
         }
 
         //
@@ -108,7 +146,7 @@ namespace Tweeter.Controllers
             if (ModelState.IsValid)
             {
                 post.user = user;
-                post.likerIDs = new List<int>();
+                //post.likers = new ICollection<UserProfile>();
                 db.Posts.Add(post);
                 db.SaveChanges();
                 return RedirectToAction("Index");

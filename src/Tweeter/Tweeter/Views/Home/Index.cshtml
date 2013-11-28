@@ -28,11 +28,53 @@
             @Html.ActionLink("Edit", "Edit", "Post", new { id = item.Id }, null) |
             @Html.ActionLink("Details", "Details", "Post", new { id = item.Id }, null) |
             @Html.ActionLink("Delete", "Delete", "Post", new { id = item.Id }, null) |
-            @Html.ActionLink("Like", "Like", "Post", new { id = item.Id }, null) <br><br>
+            @Html.ActionLink("Like", "Like", "Post", new { id = item.Id }, null) |
+            @Html.ActionLink("Follow", "Follow", "Post", new { id = item.Id }, null)<br><br>
         </td>
     </tr>
 }
 
-<h3>Followed Posts:</h3>
+<!--<h3>Followed Posts:</h3>
+//foreach (var item in Model)
+{
+    if (item.likers.Contains(Page.User.Identity.Name))
+    {
+        <tr>
+        <td>
+            Text:
+            //Html.DisplayFor(modelItem => item.postContent) <br>
+            Number of likes: 
+            //Html.DisplayFor(modelItem => item.numLikes)<br>
+        </td>
+        <td>
+            //Html.ActionLink("Edit", "Edit", "Post", new { id = item.Id }, null) |
+            //Html.ActionLink("Details", "Details", "Post", new { id = item.Id }, null) |
+            //Html.ActionLink("Delete", "Delete", "Post", new { id = item.Id }, null) |
+            //Html.ActionLink("Like", "Like", "Post", new { id = item.Id }, null)<br><br>
+        </td>
+    </tr>
+    }
+}
 
 <h3>Liked Posts:</h3>
+//foreach (var item in Model)
+{
+    if (item.likers.Contains(Page.User.Identity.Name))
+    {
+        <tr>
+            <td>
+                Text:
+                //Html.DisplayFor(modelItem => item.postContent) <br>
+                Number of likes:
+                //Html.DisplayFor(modelItem => item.numLikes)<br>
+            </td>
+            <td>
+                //Html.ActionLink("Edit", "Edit", "Post", new { id = item.Id }, null) |
+                //Html.ActionLink("Details", "Details", "Post", new { id = item.Id }, null) |
+                //Html.ActionLink("Delete", "Delete", "Post", new { id = item.Id }, null) |
+                //Html.ActionLink("Like", "Like", "Post", new { id = item.Id }, null)<br><br>
+            </td>
+        </tr>
+    }
+}
+-->

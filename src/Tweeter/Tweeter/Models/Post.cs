@@ -25,11 +25,11 @@ namespace Tweeter.Models
 
         public virtual UserProfile user { get; set; }
 
-        public List<int> likerIDs { get; set; }
+        public virtual ICollection<UserProfile> likers { get; set; }
 
         public int numLikes { get; set; }
 
-        public List<int> followers { get; set; }
+        public virtual ICollection<UserProfile> followers { get; set; }
 
 
     }
