@@ -8,6 +8,7 @@ using System.Web.Mvc;
 using Tweeter.Models;
 using System.Web.Security;
 using WebMatrix.WebData;
+using System.Text.RegularExpressions;
 
 namespace Tweeter.Controllers
 {
@@ -125,6 +126,30 @@ namespace Tweeter.Controllers
             if (ModelState.IsValid)
             {
                 post.creator = user;
+                //identify the hashtags in the post
+                List<string> hashtags = extractHashtags(post.postContent);
+                foreach (string tag in hashtags)
+                {
+                    Hashtag hashtag;
+                    //add the hashtag if it doesn't already exist
+                    if (db.Hashtags.Where(h => h.name == tag).Count() == 0)
+                    {
+                         hashtag = new Hashtag { name = tag };
+                         db.Hashtags.Add(hashtag);
+                    }
+                    else
+                    {
+                        hashtag = db.Hashtags.Where(h => h.name == tag).FirstOrDefault();
+                        db.Entry(hashtag).State = EntityState.Unchanged;
+                    }
+                    //update the hashtag's list of posts
+                    hashtag.posts.Add(post);
+                    //update the post's list of hashtags
+                    post.hashtags.Add(hashtag);
+                    
+                    
+                }
+
                 db.Posts.Add(post);
                 db.SaveChanges();
                 return RedirectToAction("Index");
@@ -192,6 +217,17 @@ namespace Tweeter.Controllers
         {
             db.Dispose();
             base.Dispose(disposing);
+        }
+
+        private List<string> extractHashtags(string body)
+        {
+            List<string> results = new List<string>();
+            string pattern = "(?<=\\#)\\w+(?=(\\W|$))";
+            foreach (Match m in Regex.Matches(body, pattern))
+            {
+                results.Add(m.Value);
+            }
+            return results;
         }
     }
 }

@@ -13,6 +13,10 @@ namespace Tweeter.Models
 
         public string name { get; set; }
         public virtual ICollection<Post> posts { get; set; }
+        public Hashtag()
+        {
+            posts = new HashSet<Post>();
+        }
     }
 
 }
