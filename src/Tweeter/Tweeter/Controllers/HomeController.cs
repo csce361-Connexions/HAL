@@ -9,7 +9,7 @@ namespace Tweeter.Controllers
 {
     public class HomeController : Controller
     {
-        private PostContext db = new PostContext();
+        private EntityContext db = new EntityContext();
 
         public ActionResult Index()
         {

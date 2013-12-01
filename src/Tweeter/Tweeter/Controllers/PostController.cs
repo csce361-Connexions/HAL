@@ -13,7 +13,7 @@ namespace Tweeter.Controllers
 {
     public class PostController : Controller
     {
-        private PostContext db = new PostContext();
+        private EntityContext db = new EntityContext();
 
         //
         // GET: /Post/
@@ -33,34 +33,39 @@ namespace Tweeter.Controllers
             UserProfile user = new UserProfile();
             user = (from u in userDb.UserProfiles where u.UserId == WebSecurity.CurrentUserId select u).FirstOrDefault();
             Post post = db.Posts.Find(id);
-            
-            //if the likers list is null, initialize it
-            //if (post.likers == null)
+            //if (!post.likers.Contains(user))
             //{
-            //    post.likers = new ICollection<UserProfile>();
+            //    post.likers.Add(user);
+            //}
+            //if (!user.likes.Contains(post))
+            //{
+            //    user.likes.Add(post);
+            //}
+            
+            
+
+            ////if the user has not already liked the post
+            //List<String> userNames = new List<String>();
+            //foreach (UserProfile use in post.likers)
+            //{
+            //    if(!userNames.Contains(use.UserName)){
+            //        userNames.Add(use.UserName);
+            //    }
             //}
 
-            //if the user has not already liked the post
-            List<String> userNames = new List<String>();
-            foreach (UserProfile use in post.likers)
-            {
-                if(!userNames.Contains(use.UserName)){
-                    userNames.Add(use.UserName);
-                }
-            }
-
-            //if (ModelState.IsValid && !post.likers.Contains(user)) //This does not work because the users stored in the database do not have a unique ID
-            if (ModelState.IsValid && !userNames.Contains(user.UserName))
-            {
-                post.numLikes++;
-                post.likers.Add(user);
-                db.Entry(post).State = EntityState.Modified;
-                db.SaveChanges();
-                //return RedirectToAction("Index", "Home", null);
-                return Redirect(Request.UrlReferrer.ToString());
-            }
-            //return View();
+            ////if (ModelState.IsValid && !post.likers.Contains(user)) //This does not work because the users stored in the database do not have a unique ID
+            //if (ModelState.IsValid && !userNames.Contains(user.UserName))
+            //{
+            //    //post.numLikes++;
+            //    post.likers.Add(user);
+            //    db.Entry(post).State = EntityState.Modified;
+            //    db.SaveChanges();
+            //    //return RedirectToAction("Index", "Home", null);
+            //    return Redirect(Request.UrlReferrer.ToString());
+            //}
+            ////return View();
             return Redirect(Request.UrlReferrer.ToString());
+
         }
 
         //
@@ -82,23 +87,23 @@ namespace Tweeter.Controllers
 
             //if the user has not already liked the post
             List<String> userNames = new List<String>();
-            foreach (UserProfile use in post.followers)
-            {
-                if (!userNames.Contains(use.UserName))
-                {
-                    userNames.Add(use.UserName);
-                }
-            }
+            //foreach (UserProfile use in post.followers)
+            //{
+            //    if (!userNames.Contains(use.UserName))
+            //    {
+            //        userNames.Add(use.UserName);
+            //    }
+            //}
 
             //if (ModelState.IsValid && !post.likers.Contains(user)) //This does not work because the users stored in the database do not have a unique ID
-            if (ModelState.IsValid && !userNames.Contains(user.UserName))
-            {
-                post.followers.Add(user);
-                db.Entry(post).State = EntityState.Modified;
-                db.SaveChanges();
-                //return RedirectToAction("Index", "Home", null);
-                return Redirect(Request.UrlReferrer.ToString());
-            }
+            //if (ModelState.IsValid && !userNames.Contains(user.UserName))
+            //{
+            //    post.followers.Add(user);
+            //    db.Entry(post).State = EntityState.Modified;
+            //    db.SaveChanges();
+            //    //return RedirectToAction("Index", "Home", null);
+            //    return Redirect(Request.UrlReferrer.ToString());
+            //}
             //return View();
             return Redirect(Request.UrlReferrer.ToString());
         }
@@ -139,14 +144,11 @@ namespace Tweeter.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create(Post post)
         {
-            int asfd = WebSecurity.CurrentUserId;
             //get the current user
-            UserProfilesContext userDb = new UserProfilesContext();
-            UserProfile user = (from u in userDb.UserProfiles where u.UserId == WebSecurity.CurrentUserId select u).FirstOrDefault();
+            User user = (from u in db.Users where u.UserProfile.UserId == WebSecurity.CurrentUserId select u).FirstOrDefault();
             if (ModelState.IsValid)
             {
-                post.user = user;
-                //post.likers = new ICollection<UserProfile>();
+                post.creator = user;
                 db.Posts.Add(post);
                 db.SaveChanges();
                 return RedirectToAction("Index");

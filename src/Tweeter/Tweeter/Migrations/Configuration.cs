@@ -5,15 +5,14 @@ namespace Tweeter.Migrations
     using System.Data.Entity.Migrations;
     using System.Linq;
 
-    internal sealed class PostConfiguration : DbMigrationsConfiguration<Tweeter.Models.PostContext>
+    internal sealed class Configuration : DbMigrationsConfiguration<Tweeter.Models.EntityContext>
     {
-        public PostConfiguration()
+        public Configuration()
         {
             AutomaticMigrationsEnabled = true;
-            AutomaticMigrationDataLossAllowed = true;
         }
 
-        protected override void Seed(Tweeter.Models.PostContext context)
+        protected override void Seed(Tweeter.Models.EntityContext context)
         {
             //  This method will be called after migrating to the latest version.
 

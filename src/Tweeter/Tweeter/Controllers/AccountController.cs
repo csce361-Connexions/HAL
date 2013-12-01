@@ -15,10 +15,13 @@ using System.Net;
 
 namespace Tweeter.Controllers
 {
+     
     [Authorize]
     [InitializeSimpleMembership]
     public class AccountController : Controller
     {
+        EntityContext db = new EntityContext();
+        UserProfilesContext profilesDb = new UserProfilesContext();
         //
         // GET: /Account/Login
 
@@ -38,8 +41,7 @@ namespace Tweeter.Controllers
         public ActionResult Login(LoginModel model, string returnUrl)
         {
             //first check if the user has verified via email
-            UserProfilesContext db = new UserProfilesContext();
-            UserProfile user = db.UserProfiles.Where(u => u.UserName == model.UserName).FirstOrDefault();
+            User user = db.Users.Where(u => u.UserProfile.UserName == model.UserName).FirstOrDefault();
             if (user.verification == null)
             {
 
@@ -94,20 +96,22 @@ namespace Tweeter.Controllers
                 // Attempt to register the user
                 try
                 {
-                    UserProfilesContext db = new UserProfilesContext();
+                   
                     WebSecurity.CreateUserAndAccount(model.UserName, model.Password);
                     //WebSecurity.Login(model.UserName, model.Password);
                     //Set the first name, last name, and email of the newly created user profile
-                    UserProfile newUser = db.UserProfiles.Where(u => u.UserName == model.UserName).FirstOrDefault();
+                    UserProfile newUserProfile = profilesDb.UserProfiles.Where(u => u.UserName == model.UserName).FirstOrDefault();
+                    User newUser = new User();
                     string guid = Guid.NewGuid().ToString();
-                    newUser.UserName = model.UserName;
-                    newUser.emailAddress = model.emailAddress;
-                    newUser.firstName = model.firstName;
-                    newUser.lastName = model.lastName;
+                    //newUser.UserName = model.UserName;
+                    newUser.UserProfile = newUserProfile;
+                    newUser.EmailAddress = model.emailAddress;
+                    newUser.FirstName = model.firstName;
+                    newUser.LastName = model.lastName;
                     newUser.verification = guid;
                     sendVerificationEmail(newUser);
-
-					db.Entry(newUser).State = System.Data.EntityState.Modified;
+                    db.Entry(newUserProfile).State = System.Data.EntityState.Unchanged;
+                    db.Users.Add(newUser);
                     db.SaveChanges();
                     TempData["message"] = "Check your email to finish creating your account.";
                     return RedirectToAction("Index", "Home");
@@ -128,8 +132,8 @@ namespace Tweeter.Controllers
         public JsonResult CheckUserName(string username, string firstname="", string lastname="")
         {
             //Check if the username exists in the database
-            UserProfilesContext db = new UserProfilesContext();
-            UserProfile existing = db.UserProfiles.Where(u => u.UserName == username).FirstOrDefault();
+            
+            UserProfile existing = profilesDb.UserProfiles.Where(u => u.UserName == username).FirstOrDefault();
             //if it does not, return nothing
             List<string> suggestions = new List<string>();
             if (existing != null)
@@ -137,7 +141,7 @@ namespace Tweeter.Controllers
                 //Check first_last
                 if(firstname!="" && lastname!=""){
                 string firstLast = firstname +"_"+ lastname;
-                bool taken = (from u in db.UserProfiles where u.UserName == firstLast select u).Count() > 0;
+                bool taken = (from u in profilesDb.UserProfiles where u.UserName == firstLast select u).Count() > 0;
                 if (!taken)
                 {
                     suggestions.Add(firstLast);
@@ -148,7 +152,7 @@ namespace Tweeter.Controllers
                 {
                     //Count up with the username until there are three suggestions
                     string altName = existing.UserName + i;
-                    bool altTaken = (from u in db.UserProfiles where u.UserName == altName select u).Count() > 0;
+                    bool altTaken = (from u in profilesDb.UserProfiles where u.UserName == altName select u).Count() > 0;
                     if (!altTaken)
                     {
                         suggestions.Add(altName);
@@ -168,8 +172,7 @@ namespace Tweeter.Controllers
         public ActionResult Verify(string guid)
         {
             //get the user with the given guid
-            UserProfilesContext db = new UserProfilesContext();
-            UserProfile user = db.UserProfiles.Where(u => u.verification == guid).FirstOrDefault();
+            User user = db.Users.Where(u => u.verification == guid).FirstOrDefault();
             user.verification = null;
             db.Entry(user).State = System.Data.EntityState.Modified;
             db.SaveChanges();
@@ -347,14 +350,14 @@ namespace Tweeter.Controllers
             if (ModelState.IsValid)
             {
                 // Insert a new user into the database
-                using (UserProfilesContext db = new UserProfilesContext())
+                using (profilesDb)
                 {
-                    UserProfile user = db.UserProfiles.FirstOrDefault(u => u.UserName.ToLower() == model.UserName.ToLower());
+                    UserProfile user = profilesDb.UserProfiles.FirstOrDefault(u => u.UserName.ToLower() == model.UserName.ToLower());
                     // Check if user already exists
                     if (user == null)
                     {
                         // Insert name into the profile table
-                        db.UserProfiles.Add(new UserProfile { UserName = model.UserName });
+                        profilesDb.UserProfiles.Add(new UserProfile { UserName = model.UserName });
                         db.SaveChanges();
 
                         OAuthWebSecurity.CreateOrUpdateAccount(provider, providerUserId, model.UserName);
@@ -413,14 +416,14 @@ namespace Tweeter.Controllers
         }
 
         #region Helpers
-        private void sendVerificationEmail(UserProfile recipient)
+        private void sendVerificationEmail(User recipient)
         {
             
             string url = string.Format("http://{0}/Account/Verify?guid={1}", Request.Url.Authority, recipient.verification);
             string body = string.Format("Welcome to Tweeter! To verify your new account, follow <a href=\"{0}\">this link</a>.", url);
             //Send email
             MailAddress from = new MailAddress("tmcclenahan0@gmail.com", "Tweeter");
-            MailAddress to = new MailAddress(recipient.emailAddress);
+            MailAddress to = new MailAddress(recipient.EmailAddress);
             MailMessage mailMessage = new MailMessage(from, to);
             mailMessage.Body = body;
 

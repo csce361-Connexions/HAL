@@ -10,8 +10,7 @@ namespace Tweeter.Models
 {
     public class UserProfilesContext : DbContext
     {
-        public UserProfilesContext()
-            : base("DefaultConnection")
+        public UserProfilesContext():base("DefaultConnection")
         {
         }
 
@@ -25,12 +24,6 @@ namespace Tweeter.Models
         [DatabaseGeneratedAttribute(DatabaseGeneratedOption.Identity)]
         public int UserId { get; set; }
         public string UserName { get; set; }
-
-        public string emailAddress { get; set; }
-        public string firstName { get; set; }
-        public string lastName { get; set; }
-
-        public string verification { get; set; }
     }
 
     public class RegisterExternalLoginModel
