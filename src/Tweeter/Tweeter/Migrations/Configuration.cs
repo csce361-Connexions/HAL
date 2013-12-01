@@ -10,6 +10,7 @@ namespace Tweeter.Migrations
         public Configuration()
         {
             AutomaticMigrationsEnabled = true;
+            AutomaticMigrationDataLossAllowed = true;
         }
 
         protected override void Seed(Tweeter.Models.EntityContext context)

@@ -16,5 +16,18 @@ namespace Tweeter.Models
         {
 
         }
+        protected override void OnModelCreating(DbModelBuilder modelBuilder)
+        {
+            //base.OnModelCreating(modelBuilder);
+            modelBuilder.Entity<Post>().
+                HasMany(p => p.likers).WithMany(u => u.likes).Map(
+                m =>
+                {
+                    m.MapLeftKey("likes_PostId");
+                    m.MapRightKey("likes_UserId");
+                    m.ToTable("Likes");
+                });
+            
+        }
     }
 }

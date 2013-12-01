@@ -14,6 +14,8 @@ namespace Tweeter.Models
         public string EmailAddress { get; set; }
         public string verification { get; set; }
         public virtual UserProfile UserProfile { get; set; }
+
+        public virtual ICollection<Post> likes { get; set; }
     }
    
 }

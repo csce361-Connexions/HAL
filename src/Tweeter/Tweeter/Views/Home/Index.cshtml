@@ -20,9 +20,9 @@
     <tr>
         <td>
             Text:
-            @Html.DisplayFor(modelItem => item.postContent) <br>
+            @item.postContent <br/>
             Number of likes: 
-           <br>
+            @item.likers.Count<br/>
         </td>
         <td>
             @Html.ActionLink("Edit", "Edit", "Post", new { id = item.Id }, null) |
