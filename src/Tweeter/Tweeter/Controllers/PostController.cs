@@ -45,45 +45,6 @@ namespace Tweeter.Controllers
 
         }
 
-        //
-        // POST: /Post/Follow/5
-        public ActionResult Follow(int id)
-        {
-            int currUid = WebSecurity.CurrentUserId;
-            //get the current user
-            UserProfilesContext userDb = new UserProfilesContext();
-            UserProfile user = new UserProfile();
-            user = (from u in userDb.UserProfiles where u.UserId == WebSecurity.CurrentUserId select u).FirstOrDefault();
-            Post post = db.Posts.Find(id);
-
-            //if the likers list is null, initialize it
-            //if (post.likers == null)
-            //{
-            //    post.likers = new ICollection<UserProfile>();
-            //}
-
-            //if the user has not already liked the post
-            List<String> userNames = new List<String>();
-            //foreach (UserProfile use in post.followers)
-            //{
-            //    if (!userNames.Contains(use.UserName))
-            //    {
-            //        userNames.Add(use.UserName);
-            //    }
-            //}
-
-            //if (ModelState.IsValid && !post.likers.Contains(user)) //This does not work because the users stored in the database do not have a unique ID
-            //if (ModelState.IsValid && !userNames.Contains(user.UserName))
-            //{
-            //    post.followers.Add(user);
-            //    db.Entry(post).State = EntityState.Modified;
-            //    db.SaveChanges();
-            //    //return RedirectToAction("Index", "Home", null);
-            //    return Redirect(Request.UrlReferrer.ToString());
-            //}
-            //return View();
-            return Redirect(Request.UrlReferrer.ToString());
-        }
 
         //
         // GET: /Post/Details/5
@@ -149,7 +110,7 @@ namespace Tweeter.Controllers
                     
                     
                 }
-
+                post.timestamp = DateTime.Now;
                 db.Posts.Add(post);
                 db.SaveChanges();
                 return RedirectToAction("Index");

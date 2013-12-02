@@ -17,6 +17,8 @@ namespace Tweeter.Models
         public string postContent{get; set;}
 
         public virtual User creator { get; set; }
+        
+        public DateTime timestamp { get; set; }
 
         public virtual ICollection<Hashtag> hashtags { get; set; }
         public virtual ICollection<User> likers { get; set; }
