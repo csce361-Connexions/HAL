@@ -46,7 +46,9 @@ namespace Tweeter.Controllers
             {
 
 
-                if (ModelState.IsValid && WebSecurity.Login(model.UserName, model.Password, persistCookie: model.RememberMe))
+                if (ModelState.IsValid && 
+                    !WebSecurity.IsAccountLockedOut(model.UserName, 2, 60) &&
+                    WebSecurity.Login(model.UserName, model.Password, persistCookie: model.RememberMe))
                 {
                     return RedirectToLocal(returnUrl);
                 }
@@ -58,7 +60,14 @@ namespace Tweeter.Controllers
                 return View(model);
             }
             // If we got this far, something failed, redisplay form
-            ModelState.AddModelError("", "The user name or password provided is incorrect.");
+            if (WebSecurity.IsAccountLockedOut(model.UserName, 2, 60))
+            {
+                ModelState.AddModelError("", "Your account has been locked after too many failed login attempts. Try again in 1 minute.");
+            }
+            else
+            {
+                ModelState.AddModelError("", "The user name or password provided is incorrect.");
+            }
             return View(model);
         }
 

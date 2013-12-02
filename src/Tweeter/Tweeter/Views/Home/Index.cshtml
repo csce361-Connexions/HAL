@@ -20,7 +20,7 @@
     <tr>
         <td>
             Text:
-            @item.postContent <br/>
+            <span class="postcontent">@item.postContent</span> <br/>
             Number of likes: 
             @item.likers.Count<br/>
         </td>
@@ -33,7 +33,11 @@
         </td>
     </tr>
 }
+<script type="text/javascript">
+    $("span.postcontent").each(function () {
 
+    });
+</script>
 <!--<h3>Followed Posts:</h3>
 //foreach (var item in Model)
 {
