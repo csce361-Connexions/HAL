@@ -21,10 +21,8 @@
 {
     <tr>
         <td>
-            Text:
-            @item.postContent <br />
-            Number of likes:
-            @item.likers.Count<br />
+            @item.postContent - @Html.ActionLink(item.creator.FirstName + " " + item.creator.LastName, "Details", "User", new { id = item.creator.Id },null)<br />
+            @item.likers.Count @(item.likers.Count==1 ? "person likes this" : "people like this")<br />
         </td>
         <td>
             @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
