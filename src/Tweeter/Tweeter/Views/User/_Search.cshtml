@@ -1,0 +1,17 @@
+﻿@model Tweeter.Models.UserSearchModel
+@using (Html.BeginForm()) {
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary()
+    <h3>Search by:</h3>
+    <fieldset>
+        First Name:
+        @Html.TextBoxFor(m => m.firstName)
+        -AND-
+        Last Name:
+            @Html.TextBoxFor(m => m.lastName)
+        -OR-
+        Username:
+            @Html.TextBoxFor(m => m.userName)
+        <input type="submit" value="Search" />
+    </fieldset>
+}
