@@ -39,6 +39,7 @@
 
 </table>
 <script type="text/javascript">
+    var refreshInterval = window.setInterval(refreshPosts,10000)
     $("a.commentLink").on("click", function () {
         //appear the box
         var id = $(this).attr("id")
@@ -49,5 +50,9 @@
         var id = $(this).attr("id")
         $("#commentBox" + id).hide(500);
     })
-
+    function refreshPosts(){
+        $.get("Post/Index",function(resp){
+            $("section.main-content").empty().append(resp);
+        })
+    }
 </script>
