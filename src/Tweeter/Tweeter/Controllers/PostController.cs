@@ -19,12 +19,27 @@ namespace Tweeter.Controllers
         //
         // GET: /Post/
 
+        
         public ActionResult Index()
         {
-            //TODO: Perform some logic here to filter down the list of posts you can see
-            return View(db.Posts.ToList());
-        }
-
+                HashSet<Post> myPosts = new HashSet<Post>();
+                //get all posts of hashtags you are watching
+                User currentUser = db.Users.Where(u => u.UserProfile.UserId == WebSecurity.CurrentUserId).FirstOrDefault();
+                
+                List<Post> hashtagPosts = new List<Post>();
+                hashtagPosts = db.Posts.Where(p => p.hashtags.Intersect(currentUser.watching).Any()).ToList();
+                myPosts.Concat(hashtagPosts);
+                List<Post> followingPosts = new List<Post>();
+                followingPosts = db.Posts.Where(p => currentUser.following.Contains(p.creator)).ToList();
+                myPosts.Concat(followingPosts);
+                List<Post> postsByMe = new List<Post>();
+                postsByMe = db.Posts.Where(p => p.creator.Id == currentUser.Id).ToList();
+                myPosts.Concat(postsByMe);
+                return View("Index", myPosts);
+            }
+           
+            
+        
         //
         // POST: /Post/
         [HttpPost]
@@ -70,7 +85,7 @@ namespace Tweeter.Controllers
            
             return View(resultSet);
         }
-
+       
         //
         // POST: /Post/Like/5
         public ActionResult Like(int id)

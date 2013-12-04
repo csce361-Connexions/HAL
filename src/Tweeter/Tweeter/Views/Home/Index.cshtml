@@ -1,4 +1,4 @@
-﻿@model IEnumerable<Tweeter.Models.Post>
+﻿@using Tweeter.Models
 
 @{
     ViewBag.Title = "Home Page";
@@ -14,23 +14,10 @@
         </div>
     </section>
 }
-<h3>Recent Posts:</h3>
-@foreach (var item in Model)
+@if (WebSecurity.IsAuthenticated)
 {
-    <tr>
-        <td>
-            Text:
-            <span class="postcontent">@item.postContent</span> <br/>
-            Number of likes: 
-            @item.likers.Count<br/>
-        </td>
-        <td>
-            @Html.ActionLink("Details", "Details", "Post", new { id = item.Id }, null) |
-            @Html.ActionLink("Like", "Like", "Post", new { id = item.Id }, null) |
-            @Html.ActionLink("Follow", "Follow", "Post", new { id = item.Id }, null) |
-           
-        </td>
-    </tr>
+    
+@Html.Action("Index","Post")
 }
 <script type="text/javascript">
     $("span.postcontent").each(function () {

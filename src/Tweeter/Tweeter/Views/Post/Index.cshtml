@@ -5,10 +5,11 @@
 }
 
 <h2>Index</h2>
-@Html.Partial("_Search", new Tweeter.Models.PostSearchModel())
+
 <p>
     @Html.ActionLink("Create New", "Create")
 </p>
+@Html.Partial("_Search", new Tweeter.Models.PostSearchModel())
 <table>
     <tr>
         <th>
@@ -17,28 +18,28 @@
         <th></th>
     </tr>
 
-@foreach (var item in Model)
-{
-    <tr>
-        <td>
-            @item.postContent - @Html.ActionLink(item.creator.FirstName + " " + item.creator.LastName, "Details", "User", new { id = item.creator.Id },null)<br />
-            @item.likers.Count @(item.likers.Count==1 ? "person likes this" : "people like this")<br />
-            <div class="commentBox" id="@("commentBox"+item.Id)">
-                <input type="text" /><button onclick="submitComment(@item.Id)">Submit</button>
-               
-            </div>
-        </td>
-        <td>
-            @Html.ActionLink("Details", "Details", new { id = item.Id }) |
-            @Html.ActionLink("Like", "Like", new { id = item.Id }) | 
-            <a class="commentLink" id="@item.Id" href="#@item.Id">Comment</a><br /><br />
-        </td>
-    </tr>
-}
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @item.postContent - @Html.ActionLink(item.creator.FirstName + " " + item.creator.LastName, "Details", "User", new { id = item.creator.Id }, null)<br />
+                @item.likers.Count @(item.likers.Count == 1 ? "person likes this" : "people like this")<br />
+                <div class="commentBox" id="@(" commentbox"+item.Id)">
+                    <input type="text" /><button onclick="submitComment(@item.Id)">Submit</button>
+
+                </div>
+            </td>
+            <td>
+                @Html.ActionLink("Details", "Details", new { id = item.Id }) |
+                @Html.ActionLink("Like", "Like", new { id = item.Id }) |
+                <a class="commentLink" id="@item.Id" href="#@item.Id">Comment</a><br /><br />
+            </td>
+        </tr>
+    }
 
 </table>
 <script type="text/javascript">
-    $("a.commentLink").on("click",function () {
+    $("a.commentLink").on("click", function () {
         //appear the box
         var id = $(this).attr("id")
         $("#commentBox" + id).show(500).find("input").focus();

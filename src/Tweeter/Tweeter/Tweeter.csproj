@@ -326,6 +326,7 @@
     <Content Include="Views\Post\_Search.cshtml" />
     <Content Include="Views\Hashtag\Index.cshtml" />
     <Content Include="Views\Hashtag\Details.cshtml" />
+    <Content Include="Views\Shared\_PostsList.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
