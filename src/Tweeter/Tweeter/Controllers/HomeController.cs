@@ -13,7 +13,7 @@ namespace Tweeter.Controllers
 
         public ActionResult Index()
         {
-            ViewBag.Message = "Welcome to HAL Tweeter!";
+            ViewBag.Message = "Welcome to HAL-lo!";
             //ViewBag.PostList = db.Posts.ToList();
             return View(db.Posts.ToList());
         }
