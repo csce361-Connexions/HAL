@@ -25,11 +25,10 @@
             @item.likers.Count<br/>
         </td>
         <td>
-            @Html.ActionLink("Edit", "Edit", "Post", new { id = item.Id }, null) |
             @Html.ActionLink("Details", "Details", "Post", new { id = item.Id }, null) |
-            @Html.ActionLink("Delete", "Delete", "Post", new { id = item.Id }, null) |
             @Html.ActionLink("Like", "Like", "Post", new { id = item.Id }, null) |
-            @Html.ActionLink("Follow", "Follow", "Post", new { id = item.Id }, null)<br><br>
+            @Html.ActionLink("Follow", "Follow", "Post", new { id = item.Id }, null) |
+           
         </td>
     </tr>
 }

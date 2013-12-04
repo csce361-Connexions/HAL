@@ -18,7 +18,7 @@
         </div>
         <div class="editor-field">
             @Html.EditorFor(model => model.postContent)
-            @Html.ValidationMessageFor(model => model.postContent)
+            <span id="postCountdown"></span>
         </div>
         
         <p>
@@ -34,3 +34,14 @@
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
 }
+<script type="text/javascript">
+    $("input#postContent").on('input', function () {
+        //get the content length, subtract it from 200
+        var length = $("input#postContent").val().length
+        if (length >= 200) {
+            $("input#postContent").val($("input#postContent").val().substr(0, 200));
+            length = $("input#postContent").val().length
+        }
+        $("span#postCountdown").empty().append((200-length) + " characters left")
+    })
+</script>

@@ -19,5 +19,11 @@ namespace Tweeter.Models
         public virtual ICollection<User> followers { get; set; }
         public virtual ICollection<User> following { get; set; }
     }
+    public class UserSearchModel
+    {
+        public string firstName { get; set; }
+        public string lastName { get; set; }
+        public string userName { get; set; }
+    }
    
 }

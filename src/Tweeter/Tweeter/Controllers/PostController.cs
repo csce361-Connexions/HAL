@@ -21,6 +21,19 @@ namespace Tweeter.Controllers
 
         public ActionResult Index()
         {
+            //TODO: Perform some logic here to filter down the list of posts you can see
+            return View(db.Posts.ToList());
+        }
+
+        //
+        // POST: /Post/
+        [HttpPost]
+        [AllowAnonymous]
+        [ValidateAntiForgeryToken]
+
+        public ActionResult Index(PostSearchModel model)
+        {
+            //TODO: Perform some logic here to filter down the list of posts you can see
             return View(db.Posts.ToList());
         }
 
@@ -86,6 +99,14 @@ namespace Tweeter.Controllers
             User user = (from u in db.Users where u.UserProfile.UserId == WebSecurity.CurrentUserId select u).FirstOrDefault();
             if (ModelState.IsValid)
             {
+                //get the parent post if there is one
+                var parentId = Request.Form["parent"];
+                if (parentId != null)
+                {
+                    Post parentPost = db.Posts.Find(parentId);
+                    post.parent = parentPost;
+                    db.Entry(parentPost).State = EntityState.Unchanged;
+                }
                 post.creator = user;
                 //identify the hashtags in the post
                 List<string> hashtags = extractHashtags(post.postContent);

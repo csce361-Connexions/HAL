@@ -21,6 +21,23 @@ namespace Tweeter.Controllers
         {
             return View(db.Users.ToList());
         }
+        //
+        // POST: /User/
+        [HttpPost]
+        [AllowAnonymous]
+        [ValidateAntiForgeryToken]
+        public ActionResult Index(UserSearchModel model)
+        {
+            if (model.firstName != null && model.lastName != null)
+            {
+                return View(db.Users.Where(u => u.LastName.Equals(model.lastName, StringComparison.CurrentCultureIgnoreCase) && u.FirstName.Equals(model.firstName, StringComparison.CurrentCultureIgnoreCase)));
+            }
+            else if (model.userName != null)
+            {
+                return View(db.Users.Where(u => u.UserProfile.UserName.Equals(model.userName, StringComparison.CurrentCultureIgnoreCase)));
+            }
+            return View(db.Users.ToList());
+        }
 
         //
         // GET: /User/Details/5

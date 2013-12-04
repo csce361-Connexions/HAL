@@ -261,3 +261,4 @@ C:\Users\alex-frodyma\Documents\GitHub\HAL\src\Tweeter\Tweeter\obj\Debug\Tweeter
 C:\Users\Tom\Documents\Visual Studio 2013\Projects\HAL\src\Tweeter\Tweeter\obj\Debug\Tweeter.Migrations.Initial.resources
 C:\Users\Tom\Documents\Visual Studio 2013\Projects\HAL\src\Tweeter\Tweeter\obj\Debug\Tweeter.csproj.GenerateResource.Cache
 C:\Users\Chase\HAL\src\Tweeter\Tweeter\obj\Debug\Tweeter.Migrations.Initial.resources
+C:\Users\Chase\HAL\src\Tweeter\Tweeter\obj\Debug\Tweeter.csprojResolveAssemblyReference.cache
