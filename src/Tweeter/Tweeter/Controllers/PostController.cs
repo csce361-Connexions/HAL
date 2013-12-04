@@ -33,8 +33,38 @@ namespace Tweeter.Controllers
 
         public ActionResult Index(PostSearchModel model)
         {
-            //TODO: Perform some logic here to filter down the list of posts you can see
-            return View(db.Posts.ToList());
+
+            ICollection<Post> resultSet = new List<Post>();
+            if (ModelState.IsValid)
+            {
+                //if is hashtag, find all posts with such a hashtag
+                if (model.query[0] == '#')
+                {
+                    string hashtagString = model.query.Substring(1);
+                    Hashtag hashtag = db.Hashtags.Where(h => h.name == hashtagString).FirstOrDefault();
+                    if (hashtag != null)
+                    {
+                        resultSet = hashtag.posts;
+                    }
+                    if (resultSet.Count == 0)
+                    {
+                        ModelState.AddModelError("emptyResultSet", "No posts match your search");
+                    }
+                }
+                else
+                {
+                    //if is not hashtag, find all posts by said user
+                    User user = db.Users.Where(u => u.UserProfile.UserName == model.query).FirstOrDefault();
+                    resultSet = db.Posts.Where(p => p.creator.UserProfile.UserId == user.UserProfile.UserId).ToList();
+                    if (resultSet.Count == 0)
+                    {
+                        ModelState.AddModelError("emptyResultSet", "No posts match your search");
+                    }
+                }
+            }
+
+           
+            return View(resultSet);
         }
 
         //

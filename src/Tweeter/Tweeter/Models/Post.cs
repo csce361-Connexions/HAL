@@ -33,6 +33,7 @@ namespace Tweeter.Models
     }
     public class PostSearchModel
     {
+       [Required]
         public string query { get; set; }
     }
 
