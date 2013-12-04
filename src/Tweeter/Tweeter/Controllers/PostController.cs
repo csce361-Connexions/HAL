@@ -194,10 +194,10 @@ namespace Tweeter.Controllers
                 post.timestamp = DateTime.Now;
                 db.Posts.Add(post);
                 db.SaveChanges();
-                return RedirectToAction("Index");
+                return RedirectToAction("Index","Home");
             }
 
-            return View(post);
+            return RedirectToAction("Index","Home");
         }
 
         //
