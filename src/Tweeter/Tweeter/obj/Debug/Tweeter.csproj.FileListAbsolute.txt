@@ -169,7 +169,6 @@ C:\Users\Chase\HAL\src\Tweeter\Tweeter\bin\zh-Hant\System.Spatial.resources.dll
 C:\Users\Chase\HAL\src\Tweeter\Tweeter\obj\Debug\Tweeter.csproj.GenerateResource.Cache
 C:\Users\Chase\HAL\src\Tweeter\Tweeter\obj\Debug\Tweeter.dll
 C:\Users\Chase\HAL\src\Tweeter\Tweeter\obj\Debug\Tweeter.pdb
-C:\Users\Chase\HAL\src\Tweeter\Tweeter\obj\Debug\Tweeter.csprojResolveAssemblyReference.cache
 C:\Users\Tom\Documents\Visual Studio 2013\Projects\HAL\src\Tweeter\Tweeter\obj\Debug\Tweeter.csprojResolveAssemblyReference.cache
 C:\Users\alex-frodyma\Documents\GitHub\HAL\src\Tweeter\Tweeter\obj\Debug\Tweeter.Migrations.InitialMigration.resources
 C:\Users\alex-frodyma\Documents\GitHub\HAL\src\Tweeter\Tweeter\obj\Debug\Tweeter.csproj.GenerateResource.Cache
