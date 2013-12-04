@@ -41,6 +41,10 @@ namespace Tweeter.Controllers
                 if (model.query[0] == '#')
                 {
                     string hashtagString = model.query.Substring(1);
+                    if (hashtagString == "")
+                    {
+                        return RedirectToAction("Index", "Hashtag");
+                    }
                     Hashtag hashtag = db.Hashtags.Where(h => h.name == hashtagString).FirstOrDefault();
                     if (hashtag != null)
                     {
@@ -146,7 +150,7 @@ namespace Tweeter.Controllers
                     //add the hashtag if it doesn't already exist
                     if (db.Hashtags.Where(h => h.name == tag).Count() == 0)
                     {
-                         hashtag = new Hashtag { name = tag };
+                         hashtag = new Hashtag { name = tag};
                          db.Hashtags.Add(hashtag);
                     }
                     else

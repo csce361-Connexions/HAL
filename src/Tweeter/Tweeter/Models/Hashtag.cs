@@ -13,9 +13,12 @@ namespace Tweeter.Models
 
         public string name { get; set; }
         public virtual ICollection<Post> posts { get; set; }
+        public DateTime creationDate { get; set; }
+        public virtual ICollection<User> watchers { get; set; }
         public Hashtag()
         {
             posts = new HashSet<Post>();
+            creationDate = DateTime.Now;
         }
     }
 

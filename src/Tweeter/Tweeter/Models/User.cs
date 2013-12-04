@@ -18,6 +18,7 @@ namespace Tweeter.Models
         public virtual ICollection<Post> likes { get; set; }
         public virtual ICollection<User> followers { get; set; }
         public virtual ICollection<User> following { get; set; }
+        public virtual ICollection<Hashtag> watching { get; set; }
     }
     public class UserSearchModel
     {

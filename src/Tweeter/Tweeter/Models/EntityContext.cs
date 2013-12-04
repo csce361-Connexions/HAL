@@ -35,6 +35,14 @@ namespace Tweeter.Models
                     m.MapRightKey("followingId");
                     m.ToTable("Follow");
                 });
+            modelBuilder.Entity<Hashtag>().
+                HasMany(h => h.watchers).WithMany(u => u.watching).Map(
+                m =>
+                {
+                    m.MapLeftKey("watcherId");
+                    m.MapRightKey("watchingId");
+                    m.ToTable("Watch");
+                });
         }
     }
 }
