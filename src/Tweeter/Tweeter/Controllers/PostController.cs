@@ -25,17 +25,28 @@ namespace Tweeter.Controllers
                 HashSet<Post> myPosts = new HashSet<Post>();
                 //get all posts of hashtags you are watching
                 User currentUser = db.Users.Where(u => u.UserProfile.UserId == WebSecurity.CurrentUserId).FirstOrDefault();
-                
-                List<Post> hashtagPosts = new List<Post>();
-                hashtagPosts = db.Posts.Where(p => p.hashtags.Intersect(currentUser.watching).Any()).ToList();
-                myPosts.Concat(hashtagPosts);
+                //Get a list of all hashtags ids you're watching
+                List<int> hids = currentUser.watching.Select(h => h.Id).ToList();
+                //Get all hashtags with one of those ids
+                List<Hashtag> mytags = db.Hashtags.Where(h => hids.Contains(h.Id)).ToList();
+                //Get all posts with one of those hashtags
+                foreach(Hashtag tag in mytags){
+                    List<Post> myHashtagPosts = db.Posts.Where(p=>p.hashtags.Select(h=>h.Id).Contains(tag.Id)).ToList();
+                    myPosts.UnionWith(myHashtagPosts);
+                }
                 List<Post> followingPosts = new List<Post>();
-                followingPosts = db.Posts.Where(p => currentUser.following.Contains(p.creator)).ToList();
-                myPosts.Concat(followingPosts);
+                //Get all user ids that you're following
+                List<int> userIds = currentUser.following.Select(u=>u.Id).ToList();
+                //get all posts by one of those users
+                foreach (int userid in userIds)
+                {
+                    List<Post> thisUsersPosts = db.Posts.Where(p => p.creator.Id == userid).ToList();
+                    myPosts.UnionWith(thisUsersPosts);
+                }
                 List<Post> postsByMe = new List<Post>();
                 postsByMe = db.Posts.Where(p => p.creator.Id == currentUser.Id).ToList();
-                myPosts.Concat(postsByMe);
-                return View("Index", myPosts);
+                myPosts.UnionWith(postsByMe);
+                return PartialView("Index", myPosts);
             }
            
             
@@ -83,7 +94,7 @@ namespace Tweeter.Controllers
             }
 
            
-            return View(resultSet);
+            return PartialView(resultSet);
         }
        
         //
