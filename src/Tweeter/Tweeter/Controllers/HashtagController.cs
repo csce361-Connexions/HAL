@@ -6,6 +6,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using Tweeter.Models;
+using WebMatrix.WebData;
 
 namespace Tweeter.Controllers
 {
@@ -26,14 +27,65 @@ namespace Tweeter.Controllers
 
         public ActionResult Details(int id = 0)
         {
-            Hashtag hashtag = db.Hashtags.Find(id);
-            if (hashtag == null)
+            if (WebSecurity.IsAuthenticated)
             {
-                return HttpNotFound();
+                Hashtag hashtag = db.Hashtags.Find(id);
+                if (hashtag == null)
+                {
+                    return HttpNotFound();
+                }
+                User currentUser = (from u in db.Users where u.UserProfile.UserId == WebSecurity.CurrentUserId select u).FirstOrDefault();
+                if (currentUser.watching.Contains(hashtag))
+                {
+                    ViewBag.watchText = "Unwatch";
+                }
+                else
+                {
+                    ViewBag.watchText = "Watch";
+                }
+                return View(hashtag);
             }
-            return View(hashtag);
+            else
+            {
+                return (RedirectToAction("Login", "Account"));
+            }
         }
+        public ActionResult Watch(int id)
+        {
+            if (WebSecurity.IsAuthenticated)
+            {
+                //get the current user
+                User currentUser = (from u in db.Users where u.UserProfile.UserId == WebSecurity.CurrentUserId select u).FirstOrDefault();
+                if (db.Users.Where(u => u.Id == id).Count() != 0)
+                {
+                    Hashtag tag = db.Hashtags.Find(id);
 
+                    //are we watching or unwatching?
+                    if (currentUser.watching.Contains(tag))
+                    {
+                        //ununwatch
+                        currentUser.watching.Remove(tag);
+                        tag.watchers.Remove(currentUser);
+                    }
+                    else
+                    {
+                        //watch
+                        //associate the current user and the watched tag with each other
+                        currentUser.watching.Add(tag);
+                        tag.watchers.Add(currentUser);
+                    }
+                    db.SaveChanges();
+
+
+                }
+                return Redirect(Request.UrlReferrer.ToString()); ;
+            }
+            else
+            {
+                return RedirectToAction("Login", "Account");
+            }
+           
+        }
        
         protected override void Dispose(bool disposing)
         {
