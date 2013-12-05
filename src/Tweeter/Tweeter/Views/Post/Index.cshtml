@@ -11,18 +11,12 @@
 </p>
 @Html.Partial("_Search", new Tweeter.Models.PostSearchModel())
 <table>
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.postContent)
-        </th>
-        <th></th>
-    </tr>
-
+    
     @foreach (var item in Model)
     {
         <tr>
             <td>
-                @item.postContent - @Html.ActionLink(item.creator.FirstName + " " + item.creator.LastName, "Details", "User", new { id = item.creator.Id }, null)<br />
+                @item.postContent - @Html.ActionLink(item.creator.FirstName + " " + item.creator.LastName, "Details", "User", new { id = item.creator.Id }, null) at @item.timestamp<br />
                 @item.likers.Count @(item.likers.Count == 1 ? "person likes this" : "people like this")<br />
                 <div class="commentBox" id="@(" commentbox"+item.Id)">
                     <input type="text" /><button onclick="submitComment(@item.Id)">Submit</button>
