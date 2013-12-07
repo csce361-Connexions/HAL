@@ -4,12 +4,6 @@
     ViewBag.Title = "Index";
 }
 
-<h2>Index</h2>
-
-<p>
-    @Html.ActionLink("Create New", "Create")
-</p>
-@Html.Partial("_Search", new Tweeter.Models.PostSearchModel())
 <table>
     
     @foreach (var item in Model)
@@ -45,8 +39,8 @@
         $("#commentBox" + id).hide(500);
     })
     function refreshPosts(){
-        $.get("Post/Index",function(resp){
-            $("section.main-content").empty().append(resp);
-        })
+        //$.get("Post/Index",function(resp){
+        //    $("section.main-content").empty().append(resp);
+        //})
     }
 </script>

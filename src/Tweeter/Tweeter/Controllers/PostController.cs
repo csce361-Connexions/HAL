@@ -55,22 +55,17 @@ namespace Tweeter.Controllers
            
             
         
-        //
-        // POST: /Post/
-        [HttpPost]
-        [AllowAnonymous]
-        [ValidateAntiForgeryToken]
+        
 
-        public ActionResult Index(PostSearchModel model)
+        public ActionResult Search(string query)
         {
 
             ICollection<Post> resultSet = new List<Post>();
-            if (ModelState.IsValid)
-            {
+            
                 //if is hashtag, find all posts with such a hashtag
-                if (model.query[0] == '#')
+                if (query[0] == '#')
                 {
-                    string hashtagString = model.query.Substring(1);
+                    string hashtagString = query.Substring(1);
                     if (hashtagString == "")
                     {
                         return RedirectToAction("Index", "Hashtag");
@@ -88,17 +83,17 @@ namespace Tweeter.Controllers
                 else
                 {
                     //if is not hashtag, find all posts by said user
-                    User user = db.Users.Where(u => u.UserProfile.UserName == model.query).FirstOrDefault();
+                    User user = db.Users.Where(u => u.UserProfile.UserName == query).FirstOrDefault();
                     resultSet = db.Posts.Where(p => p.creator.UserProfile.UserId == user.UserProfile.UserId).ToList();
                     if (resultSet.Count == 0)
                     {
                         ModelState.AddModelError("emptyResultSet", "No posts match your search");
                     }
                 }
-            }
 
-           
-            return PartialView(resultSet);
+
+
+                return PartialView("Index", resultSet.ToList());
         }
        
         //

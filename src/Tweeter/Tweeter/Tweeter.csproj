@@ -323,7 +323,7 @@
     <Content Include="Views\User\Index.cshtml" />
     <Content Include="Views\User\Details.cshtml" />
     <Content Include="Views\User\_Search.cshtml" />
-    <Content Include="Views\Post\_Search.cshtml" />
+    <Content Include="Views\Home\_Search.cshtml" />
     <Content Include="Views\Hashtag\Index.cshtml" />
     <Content Include="Views\Hashtag\Details.cshtml" />
     <Content Include="Views\Shared\_PostsList.cshtml" />
