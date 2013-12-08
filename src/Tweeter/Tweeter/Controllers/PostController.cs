@@ -68,7 +68,8 @@ namespace Tweeter.Controllers
                     string hashtagString = query.Substring(1);
                     if (hashtagString == "")
                     {
-                        return RedirectToAction("Index", "Hashtag");
+                        //display a list of all hashtags
+                        return PartialView("_HashtagList");
                     }
                     Hashtag hashtag = db.Hashtags.Where(h => h.name == hashtagString).FirstOrDefault();
                     if (hashtag != null)
@@ -89,6 +90,7 @@ namespace Tweeter.Controllers
                         resultSet = db.Posts.Where(p => p.creator.UserProfile.UserId == user.UserProfile.UserId).ToList();
                     }
                 }
+                ViewBag.viewIrreplaceable = true;
             return PartialView("Index", resultSet.ToList());
         }
        

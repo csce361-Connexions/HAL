@@ -2,33 +2,39 @@
 @{
     ViewBag.Title = "Index";
 }
-@if (! Model.Any())
-{
-    <span class="message-error">Your query returned no results</span><br/>
-    @Html.ActionLink("Back", "Index", "Home");
-}
-<table>
-    
-    @foreach (var item in Model)
-    {
-        <tr>
-            <td>
-                @item.postContent - @Html.ActionLink(item.creator.FirstName + " " + item.creator.LastName, "Details", "User", new { id = item.creator.Id }, null) at @item.timestamp<br />
-                @item.likers.Count @(item.likers.Count == 1 ? "person likes this" : "people like this")<br />
-                <div class="commentBox" id="@(" commentbox"+item.Id)">
-                    <input type="text" /><button onclick="submitComment(@item.Id)">Submit</button>
-
-                </div>
-            </td>
-            <td>
-                @Html.ActionLink("Details", "Details", new { id = item.Id }) |
-                @Html.ActionLink("Like", "Like", new { id = item.Id }) |
-                <a class="commentLink" id="@item.Id" href="#@item.Id">Comment</a><br /><br />
-            </td>
-        </tr>
+@{
+    bool viewIrreplaceable = false;
+    if(ViewBag.viewIrreplaceable != null){
+        viewIrreplaceable = ViewBag.viewIrreplaceable;
     }
+}
+<div id="postList" class="@(viewIrreplaceable ? "irreplaceable" : "replaceable")">
+    @if (!Model.Any())
+    {
+        <span class="message-error">Your query returned no results</span><br />
+        @Html.ActionLink("Back", "Index", "Home");
+    }
+    <table>
 
-</table>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @item.postContent - @Html.ActionLink(item.creator.FirstName + " " + item.creator.LastName, "Details", "User", new { id = item.creator.Id }, null) at @item.timestamp<br />
+                    @item.likers.Count @(item.likers.Count == 1 ? "person likes this" : "people like this")<br />
+                    <div class="commentBox" id="@(" commentbox"+item.Id)">
+                        <input type="text" /><button onclick="submitComment(@item.Id)">Submit</button>
+                    </div>
+                </td>
+                <td>
+                    @Html.ActionLink("Details", "Details", new { id = item.Id }) |
+                    @Html.ActionLink("Like", "Like", new { id = item.Id }) |
+                    <a class="commentLink" id="@item.Id" href="#@item.Id">Comment</a><br /><br />
+                </td>
+            </tr>
+        }
+    </table>
+</div>
 <script type="text/javascript">
     var refreshInterval = window.setInterval(refreshPosts,10000)
     $("a.commentLink").on("click", function () {
@@ -41,9 +47,11 @@
         var id = $(this).attr("id")
         $("#commentBox" + id).hide(500);
     })
-    function refreshPosts(){
-        //$.get("Post/Index",function(resp){
-        //    $("section.main-content").empty().append(resp);
-        //})
+    function refreshPosts() {
+        if (!$("#content-container").children(".irreplaceable")) {
+            $.get("Post/Index", function (resp) {
+                $("#content-container").empty().append(resp);
+            })
+        }
     }
 </script>

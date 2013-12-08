@@ -17,9 +17,16 @@ namespace Tweeter.Controllers
         //
         // GET: /Hashtag/
 
-        public ActionResult Index()
+        public ActionResult Index(string type="full")
         {
-            return View(db.Hashtags.OrderByDescending(h => h.creationDate).ToList());
+            if (type == "partial")
+            {
+                return PartialView(db.Hashtags.OrderByDescending(h => h.creationDate).ToList());
+            }
+            else
+            {
+                return View(db.Hashtags.OrderByDescending(h => h.creationDate).ToList());
+            }
         }
 
         //

@@ -19,15 +19,17 @@
     @Html.Partial("_PostCreate", new Tweeter.Models.Post());
     @Html.Encode("Search by hashtag or username");
     <input type="text" id="postSearch" /><button onclick="submitSearch()">Search</button>
-    <div id="postList">
+    <div id="content-container">
         @Html.Action("Index", "Post")
     </div>
 }
 <script type="text/javascript">
     function submitSearch() {
         var query = $("input#postSearch").val()
-        $.get("Post/Search", { query: query }, function (resp) {
-            $("#postList").empty().append(resp);
-        })
+        
+            $.get("Post/Search", { query: query }, function (resp) {
+                $("#content-container").empty().append(resp);
+            })
+        
     }
 </script>
