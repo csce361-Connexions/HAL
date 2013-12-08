@@ -15,7 +15,8 @@
     </section>
 }
 @if (WebSecurity.IsAuthenticated)
-{   
+{
+    @Html.Partial("_PostCreate", new Tweeter.Models.Post());
     @Html.Encode("Search by hashtag or username");
     <input type="text" id="postSearch" /><button onclick="submitSearch()">Search</button>
     <div id="postList">

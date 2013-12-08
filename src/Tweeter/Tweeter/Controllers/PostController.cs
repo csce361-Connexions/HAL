@@ -84,16 +84,12 @@ namespace Tweeter.Controllers
                 {
                     //if is not hashtag, find all posts by said user
                     User user = db.Users.Where(u => u.UserProfile.UserName == query).FirstOrDefault();
-                    resultSet = db.Posts.Where(p => p.creator.UserProfile.UserId == user.UserProfile.UserId).ToList();
-                    if (resultSet.Count == 0)
+                    if (user != null)
                     {
-                        ModelState.AddModelError("emptyResultSet", "No posts match your search");
+                        resultSet = db.Posts.Where(p => p.creator.UserProfile.UserId == user.UserProfile.UserId).ToList();
                     }
                 }
-
-
-
-                return PartialView("Index", resultSet.ToList());
+            return PartialView("Index", resultSet.ToList());
         }
        
         //

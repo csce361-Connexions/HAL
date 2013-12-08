@@ -13,7 +13,9 @@ namespace Tweeter.Models
     public class Post
     {
         public int Id {get; set;}
-        [StringLength(200)]
+
+        [Required]
+        [StringLength(200, ErrorMessage = "The {0} must be at least {2} characters long.", MinimumLength = 1)]
         public string postContent{get; set;}
 
         public virtual User creator { get; set; }

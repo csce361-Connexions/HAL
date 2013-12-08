@@ -1,9 +1,12 @@
 ﻿@model IEnumerable<Tweeter.Models.Post>
-
 @{
     ViewBag.Title = "Index";
 }
-
+@if (! Model.Any())
+{
+    <span class="message-error">Your query returned no results</span><br/>
+    @Html.ActionLink("Back", "Index", "Home");
+}
 <table>
     
     @foreach (var item in Model)
