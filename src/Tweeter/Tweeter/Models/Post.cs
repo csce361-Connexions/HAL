@@ -38,5 +38,11 @@ namespace Tweeter.Models
        [Required]
         public string query { get; set; }
     }
+    public class PostCommentModel
+    {
+        public string postContent { get; set; }
+        [Required]
+        public int parentId { get; set; }
+    }
 
 }

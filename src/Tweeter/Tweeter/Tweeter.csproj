@@ -330,6 +330,7 @@
     <Content Include="Views\Home\_PostCreate.cshtml" />
     <Content Include="Views\Post\_HashtagList.cshtml" />
     <Content Include="Views\Account\_Update.cshtml" />
+    <Content Include="Views\Post\_Comment.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

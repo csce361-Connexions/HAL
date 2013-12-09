@@ -9,3 +9,6 @@ img.avatar-full {
     height: 256px;
     width: auto;
 }
+a.commentLink {
+    cursor: pointer;
+}

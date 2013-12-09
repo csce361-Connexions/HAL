@@ -91,7 +91,7 @@ namespace Tweeter.Controllers
                     }
                 }
                 ViewBag.viewIrreplaceable = true;
-            return PartialView("Index", resultSet.ToList());
+            return PartialView("Index", resultSet.OrderByDescending(p=>p.timestamp));
         }
        
         //
@@ -195,6 +195,50 @@ namespace Tweeter.Controllers
             }
 
             return RedirectToAction("Index","Home");
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Comment(PostCommentModel model)
+        {
+            //get the current user
+            User user = (from u in db.Users where u.UserProfile.UserId == WebSecurity.CurrentUserId select u).FirstOrDefault();
+            if (ModelState.IsValid)
+            {
+                //Create the new post
+                Post post = new Post();
+                post.creator = user;
+                post.parent = db.Posts.Find(model.parentId);
+                post.postContent = model.postContent;
+                //identify the hashtags in the post
+                List<string> hashtags = extractHashtags(post.postContent);
+                foreach (string tag in hashtags)
+                {
+                    Hashtag hashtag;
+                    //add the hashtag if it doesn't already exist
+                    if (db.Hashtags.Where(h => h.name == tag).Count() == 0)
+                    {
+                        hashtag = new Hashtag { name = tag };
+                        db.Hashtags.Add(hashtag);
+                    }
+                    else
+                    {
+                        hashtag = db.Hashtags.Where(h => h.name == tag).FirstOrDefault();
+                        db.Entry(hashtag).State = EntityState.Unchanged;
+                    }
+                    //update the hashtag's list of posts
+                    hashtag.posts.Add(post);
+                    //update the post's list of hashtags
+                    post.hashtags.Add(hashtag);
+
+
+                }
+                post.timestamp = DateTime.Now;
+                db.Posts.Add(post);
+                db.SaveChanges();
+                return RedirectToAction("Index", "Home");
+            }
+
+            return RedirectToAction("Index", "Home");
         }
 
         //

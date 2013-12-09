@@ -22,14 +22,15 @@
                 <td>
                     @item.postContent - @Html.ActionLink(item.creator.FirstName + " " + item.creator.LastName, "Details", "User", new { id = item.creator.Id }, null) at @item.timestamp<br />
                     @item.likers.Count @(item.likers.Count == 1 ? "person likes this" : "people like this")<br />
-                    <div class="commentBox" id="@(" commentbox"+item.Id)">
+                    @*<div class="commentBox" id="@("commentBox"+item.Id)">
                         <input type="text" /><button onclick="submitComment(@item.Id)">Submit</button>
-                    </div>
+                    </div>*@
+                    @Html.Partial("_Comment", new Tweeter.Models.PostCommentModel() {parentId=item.Id})
                 </td>
                 <td>
                     @Html.ActionLink("Details", "Details", new { id = item.Id }) |
                     @Html.ActionLink("Like", "Like", new { id = item.Id }) |
-                    <a class="commentLink" id="@item.Id" href="#@item.Id">Comment</a><br /><br />
+                    <a class="commentLink" id="@item.Id" onclick="commentClicked(@item.Id)">Comment</a><br /><br />
                 </td>
             </tr>
         }
@@ -37,21 +38,35 @@
 </div>
 <script type="text/javascript">
     var refreshInterval = window.setInterval(refreshPosts,10000)
-    $("a.commentLink").on("click", function () {
+    var canRefresh = true
+    function commentClicked(id) {
+        canRefresh = false
         //appear the box
-        var id = $(this).attr("id")
-        $("#commentBox" + id).show(500).find("input").focus();
-    })
-    $(".commentBox input").on("blur", function () {
+        $("#commentBox" + id).show(500).find("input#postContent").focus()
+    }
+    function submitComment(id){
+
+    }
+    $(".commentBox input#postContent").on("blur", function () {
         //disappear the box
-        var id = $(this).attr("id")
-        $("#commentBox" + id).hide(500);
+        var id = $(this).parent().attr("id")
+        $("#"+id).hide(500)
+        canRefresh = true
     })
     function refreshPosts() {
-        if (!$("#content-container").children(".irreplaceable")) {
+        if ($("#content-container").children(".irreplaceable").length == 0 && canRefresh) {
             $.get("Post/Index", function (resp) {
                 $("#content-container").empty().append(resp);
             })
         }
     }
+    $("input#postContent").on('input', function () {
+        //get the content length, subtract it from 200
+        var length = $(this).val().length
+        if (length >= 200) {
+            $(this).val($(this).val().substr(0, 200));
+            length = $(this).val().length
+        }
+        $(this).parent().siblings().find("#postCountdown").empty().append((200 - length) + " characters left")
+    })
 </script>
