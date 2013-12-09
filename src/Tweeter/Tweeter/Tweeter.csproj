@@ -331,6 +331,7 @@
     <Content Include="Views\Post\_HashtagList.cshtml" />
     <Content Include="Views\Account\_Update.cshtml" />
     <Content Include="Views\Post\_Comment.cshtml" />
+    <Content Include="Views\Post\_Post.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

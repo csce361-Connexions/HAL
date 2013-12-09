@@ -26,6 +26,7 @@ namespace Tweeter.Models
         public virtual ICollection<User> likers { get; set; }
 
         public virtual Post parent { get; set; }
+        public virtual ICollection<Post> replies { get; set; }
 
         public Post()
         {

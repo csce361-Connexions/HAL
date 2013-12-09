@@ -12,3 +12,10 @@ img.avatar-full {
 a.commentLink {
     cursor: pointer;
 }
+.levelIndicator {
+    background-color:gray;
+    float:left;
+    width:3px;
+    height:40px;
+    margin-right:5px;
+}

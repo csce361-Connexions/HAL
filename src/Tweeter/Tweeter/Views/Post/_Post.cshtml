@@ -1,0 +1,23 @@
+﻿@model Tweeter.Models.Post
+
+@{
+    int level = @ViewData["level"] != null ? (int)ViewData["level"] : 0;
+}
+<tr>
+    <td></td>
+    <td style ="padding-left:@(level * 25)px"><div class="@(level>0?"levelIndicator":"")"></div>
+    @Model.postContent - @Html.ActionLink(Model.creator.FirstName + " " + Model.creator.LastName, "Details", "User", new { id = Model.creator.Id }, null) at @Model.timestamp<br />
+    @Model.likers.Count @(Model.likers.Count == 1 ? "person likes this" : "people like this")<br />
+
+    @Html.Partial("_Comment", new Tweeter.Models.PostCommentModel() { parentId = Model.Id })
+</td>
+<td>
+        @Html.ActionLink("Details", "Details", new { id = Model.Id }) |
+        @Html.ActionLink("Like", "Like", new { id = Model.Id }) |
+        <a class="commentLink" id="@Model.Id" onclick="commentClicked(@Model.Id)">Comment</a><br /><br />
+    </td>
+</tr>
+    @foreach (Tweeter.Models.Post post in Model.replies)
+    {
+        @Html.Partial("_Post", post, new ViewDataDictionary(){{"level", level+1}})
+    }
