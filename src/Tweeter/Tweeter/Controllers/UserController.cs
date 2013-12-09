@@ -112,7 +112,7 @@ namespace Tweeter.Controllers
         }
         //
         // GET: /User/Image/Thal
-        public ActionResult Image(string name)
+        public ActionResult Image(string name, string classname)
         {
             string path = Server.MapPath("~/Images/Account");
             string file = Directory.GetFiles(path, name+".*", SearchOption.TopDirectoryOnly)
@@ -123,7 +123,7 @@ namespace Tweeter.Controllers
                 filePath = Url.Content(string.Format("~/Images/Account/{0}.jpg", name));
                
             }
-            return Content(string.Format(@"<img src=""{0}"" class=""user-thumbnail""/>",filePath));
+            return Content(string.Format(@"<img src=""{0}"" class=""{1}""/>",filePath,classname));
         }
          //
         // POST: /User/Edit/1

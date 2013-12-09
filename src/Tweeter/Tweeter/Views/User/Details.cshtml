@@ -4,28 +4,13 @@
     ViewBag.Title = "Details";
 }
 
-<h2>Details</h2>
+<h2>@Model.FirstName @Model.LastName</h2>
 
 <fieldset>
     <legend>User</legend>
 
-    <div class="display-label">
-         @Html.DisplayNameFor(model => model.FirstName)
-    </div>
-    <div class="display-field">
-        @Html.DisplayFor(model => model.FirstName)
-    </div>
-
-    <div class="display-label">
-         @Html.DisplayNameFor(model => model.LastName)
-    </div>
-    <div class="display-field">
-        @Html.DisplayFor(model => model.LastName)
-    </div>
-
-    <div class="display-label">
-         @Html.DisplayNameFor(model => model.EmailAddress)
-    </div>
+    @Html.Action("Image", "User", new { name = Model.UserProfile.UserName, classname="avatar-full" })
+        
     <div class="display-field">
         @Html.DisplayFor(model => model.EmailAddress)
     </div>

@@ -1,7 +1,11 @@
 ﻿.commentBox{
     display:none;
 }
-img.user-thumbnail {
+img.avatar-thumbnail {
     height: 24px;
+    width: auto;
+}
+img.avatar-full {
+    height: 256px;
     width: auto;
 }
