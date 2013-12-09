@@ -117,17 +117,56 @@ namespace Tweeter.Controllers
             string path = Server.MapPath("~/Images/Account");
             string file = Directory.GetFiles(path, name+".*", SearchOption.TopDirectoryOnly)
             .Where(s => s.EndsWith(".jpg") || s.EndsWith(".jpeg") || s.EndsWith(".png") || s.EndsWith(".bmp")).FirstOrDefault();
+            string filePath = Url.Content(string.Format("~/Images/Account/Default/default.jpg"));
             if (file != null)
             {
-                return Content(string.Format(@"<img src=""Images/Account/{0}.jpg"" class=""user-thumbnail""/>",name));
+                filePath = Url.Content(string.Format("~/Images/Account/{0}.jpg", name));
+               
             }
-            return Content(string.Format(@"<img src=""Images/Account/Default/default.jpg"" class=""user-thumbnail""/>", name));
+            return Content(string.Format(@"<img src=""{0}"" class=""user-thumbnail""/>",filePath));
         }
+         //
+        // POST: /User/Edit/1
+        [HttpPost]
+        [AllowAnonymous]
+        [ValidateAntiForgeryToken]
+        public ActionResult Update(UserUpdateModel model)
+        {
+            try
+            {
+                //Update profile pic if one is given
+                HttpPostedFileBase image = Request.Files["profilePic"];
+                if (image.ContentLength > 1000000)
+                {
+                    throw new FileSizeException();
+                }
+                if (image.ContentLength > 0)
+                {
+                    //Save the profile picture
+                    string fileName = WebSecurity.CurrentUserName + ".jpg";
+                    string path = Path.Combine(Server.MapPath("~/Images/Account"), fileName);
+                    image.SaveAs(path);
+                }
+                User updateUser = db.Users.Where(u=>u.UserProfile.UserId == WebSecurity.CurrentUserId).FirstOrDefault();
+                updateUser.bio = model.bio;
+                db.SaveChanges();
 
+            }
+            catch (FileSizeException)
+            {
+                ModelState.AddModelError("fileSize", "Your profile picture must be under 1MB in size");
+                return View(model);
+            }
+            TempData["message"] = "Your account has been updated!";
+            return RedirectToAction("Index", "Home");
+        }
         protected override void Dispose(bool disposing)
         {
             db.Dispose();
             base.Dispose(disposing);
+        }
+        internal class FileSizeException:Exception {
+
         }
     }
 }

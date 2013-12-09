@@ -1,0 +1,27 @@
+﻿@{
+    ViewBag.Title = "Update";
+}
+@model Tweeter.Models.UserUpdateModel
+<h2>Update</h2>
+@using (Html.BeginForm("Update", "User", null, FormMethod.Post, new { enctype = "multipart/form-data" }))
+
+{
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary()
+
+    <fieldset>
+        <legend>Registration Form</legend>
+        <ol>
+            <li>
+                @Html.LabelFor(m => m.bio)
+                @Html.TextAreaFor(m => m.bio)
+            </li>
+            <li>
+                <label for="profilePic">Profile picture</label>
+                <input type="file" name="profilePic" />
+            </li>
+        </ol>
+        <input type="submit" value="Update" />
+    </fieldset>
+}
+

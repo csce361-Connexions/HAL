@@ -42,6 +42,10 @@
                 @Html.PasswordFor(m => m.ConfirmPassword)
             </li>
             <li>
+                @Html.LabelFor(m => m.bio)
+                @Html.TextAreaFor(m => m.bio)
+            </li>
+            <li>
                 <label for="profilePic">Profile picture</label>
                 <input type="file" name="profilePic" />
             </li>

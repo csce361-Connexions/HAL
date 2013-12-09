@@ -329,6 +329,7 @@
     <Content Include="Views\Shared\_PostsList.cshtml" />
     <Content Include="Views\Home\_PostCreate.cshtml" />
     <Content Include="Views\Post\_HashtagList.cshtml" />
+    <Content Include="Views\Account\_Update.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

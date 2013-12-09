@@ -111,6 +111,13 @@ namespace Tweeter.Controllers
                     {
                         throw new FileSizeException();
                     }
+                    if (image.ContentLength > 0)
+                    {
+                        //Save the profile picture
+                        string fileName = model.UserName + ".jpg";
+                        string path = Path.Combine(Server.MapPath("~/Images/Account"), fileName);
+                        image.SaveAs(path);
+                    }
                     WebSecurity.CreateUserAndAccount(model.UserName, model.Password);
                     //Set the first name, last name, and email of the newly created user profile
                     UserProfile newUserProfile = profilesDb.UserProfiles.Where(u => u.UserName == model.UserName).FirstOrDefault();
@@ -121,10 +128,8 @@ namespace Tweeter.Controllers
                     newUser.FirstName = model.firstName;
                     newUser.LastName = model.lastName;
                     newUser.verification = guid;
-                    //Save the profile picture
-                    string fileName = model.UserName + ".jpg";
-                    string path = Path.Combine(Server.MapPath("~/Images/Account"),fileName);
-                    image.SaveAs(path);
+                    newUser.bio = model.bio;
+                    
                     sendVerificationEmail(newUser);
                     db.Entry(newUserProfile).State = System.Data.EntityState.Unchanged;
                     db.Users.Add(newUser);
@@ -136,7 +141,7 @@ namespace Tweeter.Controllers
                 {
                     ModelState.AddModelError("", ErrorCodeToString(e.StatusCode));
                 }
-                catch (FileSizeException e)
+                catch (FileSizeException)
                 {
                     ModelState.AddModelError("fileSize", "Your profile picture must be under 1MB in size");
                 }
@@ -234,6 +239,10 @@ namespace Tweeter.Controllers
 
         public ActionResult Manage(ManageMessageId? message)
         {
+            if (WebSecurity.IsAuthenticated)
+            {
+                TempData["bioText"] = db.Users.Where(u => u.UserProfile.UserId == WebSecurity.CurrentUserId).FirstOrDefault().bio;
+            }
             ViewBag.StatusMessage =
                 message == ManageMessageId.ChangePasswordSuccess ? "Your password has been changed."
                 : message == ManageMessageId.SetPasswordSuccess ? "Your password has been set."

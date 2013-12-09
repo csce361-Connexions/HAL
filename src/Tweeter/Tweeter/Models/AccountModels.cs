@@ -98,6 +98,9 @@ namespace Tweeter.Models
         [Required]
         [Display(Name = "Last Name")]
         public string lastName { get; set; }
+
+        [Display(Name = "Enter a personal bio (optional)")]
+        public string bio { get; set; }
     }
 
     public class ExternalLogin
