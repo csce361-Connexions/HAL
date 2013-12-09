@@ -122,7 +122,7 @@ namespace Tweeter.Controllers
                     newUser.LastName = model.lastName;
                     newUser.verification = guid;
                     //Save the profile picture
-                    string fileName = model.UserName + Path.GetExtension(image.FileName);
+                    string fileName = model.UserName + ".jpg";
                     string path = Path.Combine(Server.MapPath("~/Images/Account"),fileName);
                     image.SaveAs(path);
                     sendVerificationEmail(newUser);

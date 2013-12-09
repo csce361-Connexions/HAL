@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
+using System.IO;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -109,8 +110,19 @@ namespace Tweeter.Controllers
             }
            
         }
-
-        
+        //
+        // GET: /User/Image/Thal
+        public ActionResult Image(string name)
+        {
+            string path = Server.MapPath("~/Images/Account");
+            string file = Directory.GetFiles(path, name+".*", SearchOption.TopDirectoryOnly)
+            .Where(s => s.EndsWith(".jpg") || s.EndsWith(".jpeg") || s.EndsWith(".png") || s.EndsWith(".bmp")).FirstOrDefault();
+            if (file != null)
+            {
+                return Content(string.Format(@"<img src=""Images/Account/{0}.jpg"" class=""user-thumbnail""/>",name));
+            }
+            return Content(string.Format(@"<img src=""Images/Account/Default/default.jpg"" class=""user-thumbnail""/>", name));
+        }
 
         protected override void Dispose(bool disposing)
         {
