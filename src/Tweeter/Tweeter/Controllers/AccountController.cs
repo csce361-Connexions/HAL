@@ -12,6 +12,7 @@ using Tweeter.Filters;
 using Tweeter.Models;
 using System.Net.Mail;
 using System.Net;
+using System.IO;
 
 namespace Tweeter.Controllers
 {
@@ -105,19 +106,25 @@ namespace Tweeter.Controllers
                 // Attempt to register the user
                 try
                 {
-                   
+                    HttpPostedFileBase image = Request.Files["profilePic"];
+                    if (image.ContentLength > 1000000)
+                    {
+                        throw new FileSizeException();
+                    }
                     WebSecurity.CreateUserAndAccount(model.UserName, model.Password);
-                    //WebSecurity.Login(model.UserName, model.Password);
                     //Set the first name, last name, and email of the newly created user profile
                     UserProfile newUserProfile = profilesDb.UserProfiles.Where(u => u.UserName == model.UserName).FirstOrDefault();
                     User newUser = new User();
                     string guid = Guid.NewGuid().ToString();
-                    //newUser.UserName = model.UserName;
                     newUser.UserProfile = newUserProfile;
                     newUser.EmailAddress = model.emailAddress;
                     newUser.FirstName = model.firstName;
                     newUser.LastName = model.lastName;
                     newUser.verification = guid;
+                    //Save the profile picture
+                    string fileName = model.UserName + Path.GetExtension(image.FileName);
+                    string path = Path.Combine(Server.MapPath("~/Images/Account"),fileName);
+                    image.SaveAs(path);
                     sendVerificationEmail(newUser);
                     db.Entry(newUserProfile).State = System.Data.EntityState.Unchanged;
                     db.Users.Add(newUser);
@@ -128,6 +135,10 @@ namespace Tweeter.Controllers
                 catch (MembershipCreateUserException e)
                 {
                     ModelState.AddModelError("", ErrorCodeToString(e.StatusCode));
+                }
+                catch (FileSizeException e)
+                {
+                    ModelState.AddModelError("fileSize", "Your profile picture must be under 1MB in size");
                 }
             }
 
@@ -478,7 +489,10 @@ namespace Tweeter.Controllers
                 OAuthWebSecurity.RequestAuthentication(Provider, ReturnUrl);
             }
         }
+        internal class FileSizeException : Exception
+        {
 
+        }
         private static string ErrorCodeToString(MembershipCreateStatus createStatus)
         {
             // See http://go.microsoft.com/fwlink/?LinkID=177550 for

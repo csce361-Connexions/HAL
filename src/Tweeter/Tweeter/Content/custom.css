@@ -1,3 +1,7 @@
 ﻿.commentBox{
     display:none;
 }
+img.user-thumbnail {
+    height: 16px;
+    width: 16px;
+}
