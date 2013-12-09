@@ -1,0 +1,23 @@
+﻿@model Tweeter.Models.PostCommentModel
+@using (Html.BeginForm("Comment","Post"))
+{
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true)
+    <div class="commentBox" id="@("commentBox"+(Model.parentId))">
+        
+                @Html.EditorFor(model => model.postContent)
+                @Html.Hidden("parentId", Model.parentId)
+                <input type="submit" value="Comment" />
+            
+            <p>
+                <span id="postCountdown"></span>
+            </p>
+    </div>
+}
+@*REMOVE THIS SCRIPT LEST IT BE LOADED FOR EVERY SINGLE POST ON THE PAGE*@
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}
+<script type="text/javascript">
+    
+</script>
