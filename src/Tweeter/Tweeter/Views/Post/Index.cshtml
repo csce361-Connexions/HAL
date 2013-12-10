@@ -42,9 +42,11 @@
         canRefresh = true
     })
     function refreshPosts() {
-        if ($("#content-container").children(".irreplaceable").length == 0 && canRefresh) {
+        if ($("#content-container").children(".irreplaceable").length == 0 && canRefresh){ 
+            canRefresh=false;
             $.get("Post/Index", function (resp) {
                 $("#content-container").empty().append(resp);
+                canRefresh = true;
             })
         }
     }

@@ -63,8 +63,7 @@ namespace Tweeter.Controllers
             {
                 //get the current user
                 User currentUser = (from u in db.Users where u.UserProfile.UserId == WebSecurity.CurrentUserId select u).FirstOrDefault();
-                if (db.Users.Where(u => u.Id == id).Count() != 0)
-                {
+                
                     Hashtag tag = db.Hashtags.Find(id);
 
                     //are we watching or unwatching?
@@ -84,7 +83,6 @@ namespace Tweeter.Controllers
                     db.SaveChanges();
 
 
-                }
                 return Redirect(Request.UrlReferrer.ToString()); ;
             }
             else
