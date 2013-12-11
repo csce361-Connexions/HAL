@@ -29,6 +29,7 @@ namespace Tweeter.Controllers
                     User currentUser = db.Users.Where(u => u.UserProfile.UserId == WebSecurity.CurrentUserId).FirstOrDefault();
                     //Get a list of all hashtags ids you're watching
                     List<int> hids = currentUser.watching.Select(h => h.Id).ToList();
+                    ViewData["myHashtags"] = hids.ToArray<int>();
                     //Get all hashtags with one of those ids
                     List<Hashtag> mytags = db.Hashtags.Where(h => hids.Contains(h.Id)).ToList();
                     //Get all posts with one of those hashtags

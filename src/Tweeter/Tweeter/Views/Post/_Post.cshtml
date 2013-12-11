@@ -17,7 +17,7 @@
         <a class="commentLink" id="@Model.Id" onclick="commentClicked(@Model.Id)">Comment</a><br /><br />
     </td>
 </tr>
-    @foreach (Tweeter.Models.Post post in Model.replies)
+    @foreach (Tweeter.Models.Post post in Model.replies.OrderByDescending(p=>p.timestamp))
     {
         @Html.Partial("_Post", post, new ViewDataDictionary(){{"level", level+1}})
     }

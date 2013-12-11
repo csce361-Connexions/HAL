@@ -7,6 +7,10 @@
     if(ViewBag.viewIrreplaceable != null){
         viewIrreplaceable = ViewBag.viewIrreplaceable;
     }
+    int[] tags;
+    if(ViewData["myHashTags"]!=null){
+        tags = (int[])ViewData["myHashTags"];
+    }
 }
 <div id="postList" class="@(viewIrreplaceable ? "irreplaceable" : "replaceable")">
     @if (!Model.Any())
@@ -15,12 +19,12 @@
         @Html.ActionLink("Back", "Index", "Home");
     }
     <table>
-
-        @foreach (var item in Model)
+        @*Show a post at this level if it is not a comment, or the model does not contain the parent*@
+       
+        @foreach (var item in Model.Where(p=>p.parent == null || (!Model.Contains(p.parent))))
         {
-            if(item.parent == null){
+           
                 @Html.Partial("_Post",item)
-            }
         }
     </table>
 </div>
