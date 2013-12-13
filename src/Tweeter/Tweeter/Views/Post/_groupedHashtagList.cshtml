@@ -1,0 +1,17 @@
+﻿@using Tweeter.Models
+@model IEnumerable<Post>
+@{
+    
+    IEnumerable<Hashtag> tags = ViewData["tags"] != null ? (List<Hashtag>)ViewData["tags"] : new List<Hashtag>();
+}
+    @foreach (Hashtag tag in tags)
+{
+        <span>@tag.name</span>
+    <table>
+        
+        @foreach(Post post in Model.Where(p=>p.hashtags.Contains(tag))){
+            ViewData["showChildren"] = false;
+            @Html.Partial("_Post", post);
+        }
+    </table>
+}

@@ -1,0 +1,18 @@
+﻿@using Tweeter.Models
+@model IEnumerable<Post>
+@{
+
+    IEnumerable<User> users = ViewData["users"] != null ? (List<User>)ViewData["users"] : new List<User>();
+}
+@foreach (User user in users)
+{
+    <span>@user.FirstName @user.LastName</span>
+    <table>
+
+        @foreach (Post post in Model.Where(p => p.creator.Id == user.Id))
+        {
+            ViewData["showChildren"] = false;
+            @Html.Partial("_Post", post);
+        }
+    </table>
+}

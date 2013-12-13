@@ -12,6 +12,9 @@
         tags = (int[])ViewData["myHashTags"];
     }
 }
+<a class="pointer" id="orderByTag" onclick="orderByTagClicked()">Hashtag</a><br /><br />
+<a class="pointer" id="orderByUser" onclick="orderByUserClicked()">User</a><br /><br />
+
 <div id="postList" class="@(viewIrreplaceable ? "irreplaceable" : "replaceable")">
     @if (!Model.Any())
     {
@@ -35,6 +38,20 @@
         canRefresh = false
         //appear the box
         $("#commentBox" + id).show(500).find("input#postContent").focus()
+    }
+    function orderByUserClicked() {
+        canRefresh = false;
+        $.get("Post/Index", {sort: "user"}, function (resp) {
+            $("#content-container").empty().append(resp);
+            canRefresh = true;
+        })
+    }
+    function orderByTagClicked() {
+        canRefresh = false;
+        $.get("Post/Index", { sort: "tag" }, function (resp) {
+            $("#content-container").empty().append(resp);
+            canRefresh = true;
+        })
     }
     function submitComment(id){
 

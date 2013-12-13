@@ -1,7 +1,8 @@
 ﻿@model Tweeter.Models.Post
 
 @{
-    int level = @ViewData["level"] != null ? (int)ViewData["level"] : 0;
+    int level = ViewData["level"] != null ? (int)ViewData["level"] : 0;
+    bool showChildren = ViewData["showChildren"] != null ? (bool)ViewData["showChildren"] : true;
 }
 <tr>
     <td></td>
@@ -14,10 +15,13 @@
 <td>
         @Html.ActionLink("Details", "Details", new { id = Model.Id }) |
         @Html.ActionLink("Like", "Like", new { id = Model.Id }) |
-        <a class="commentLink" id="@Model.Id" onclick="commentClicked(@Model.Id)">Comment</a><br /><br />
+        <a class="commentLink pointer" id="@Model.Id" onclick="commentClicked(@Model.Id)">Comment</a><br /><br />
     </td>
 </tr>
-    @foreach (Tweeter.Models.Post post in Model.replies.OrderByDescending(p=>p.timestamp))
+@if(showChildren){
+    
+    foreach (Tweeter.Models.Post post in Model.replies.OrderByDescending(p=>p.timestamp))
     {
         @Html.Partial("_Post", post, new ViewDataDictionary(){{"level", level+1}})
     }
+}

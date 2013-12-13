@@ -332,6 +332,8 @@
     <Content Include="Views\Account\_Update.cshtml" />
     <Content Include="Views\Post\_Comment.cshtml" />
     <Content Include="Views\Post\_Post.cshtml" />
+    <Content Include="Views\Post\_groupedHashtagList.cshtml" />
+    <Content Include="Views\Post\_groupedUserList.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

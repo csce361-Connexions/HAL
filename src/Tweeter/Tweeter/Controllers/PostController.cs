@@ -19,82 +19,95 @@ namespace Tweeter.Controllers
         //
         // GET: /Post/
 
-        
-        public ActionResult Index()
+
+        public ActionResult Index(string sort = "time")
         {
-                HashSet<Post> myPosts = new HashSet<Post>();
-                //get all posts of hashtags you are watching
-                if (WebSecurity.IsAuthenticated)
+            HashSet<Post> myPosts = new HashSet<Post>();
+            //get all posts of hashtags you are watching
+            if (WebSecurity.IsAuthenticated)
+            {
+                User currentUser = db.Users.Where(u => u.UserProfile.UserId == WebSecurity.CurrentUserId).FirstOrDefault();
+                //Get a list of all hashtags ids you're watching
+                List<int> hids = currentUser.watching.Select(h => h.Id).ToList();
+                ViewData["myHashtags"] = hids.ToArray<int>();
+                //Get all hashtags with one of those ids
+                List<Hashtag> mytags = db.Hashtags.Where(h => hids.Contains(h.Id)).ToList();
+                //Get all posts with one of those hashtags
+                foreach (Hashtag tag in mytags)
                 {
-                    User currentUser = db.Users.Where(u => u.UserProfile.UserId == WebSecurity.CurrentUserId).FirstOrDefault();
-                    //Get a list of all hashtags ids you're watching
-                    List<int> hids = currentUser.watching.Select(h => h.Id).ToList();
-                    ViewData["myHashtags"] = hids.ToArray<int>();
-                    //Get all hashtags with one of those ids
-                    List<Hashtag> mytags = db.Hashtags.Where(h => hids.Contains(h.Id)).ToList();
-                    //Get all posts with one of those hashtags
-                    foreach (Hashtag tag in mytags)
-                    {
-                        List<Post> myHashtagPosts = db.Posts.Where(p => p.hashtags.Select(h => h.Id).Contains(tag.Id)).ToList();
-                        myPosts.UnionWith(myHashtagPosts);
-                    }
-                    List<Post> followingPosts = new List<Post>();
-                    //Get all user ids that you're following
-                    List<int> userIds = currentUser.following.Select(u => u.Id).ToList();
-                    //get all posts by one of those users
-                    foreach (int userid in userIds)
-                    {
-                        List<Post> thisUsersPosts = db.Posts.Where(p => p.creator.Id == userid).ToList();
-                        myPosts.UnionWith(thisUsersPosts);
-                    }
-                    List<Post> postsByMe = new List<Post>();
-                    postsByMe = db.Posts.Where(p => p.creator.Id == currentUser.Id).ToList();
-                    myPosts.UnionWith(postsByMe);
+                    List<Post> myHashtagPosts = db.Posts.Where(p => p.hashtags.Select(h => h.Id).Contains(tag.Id)).ToList();
+                    myPosts.UnionWith(myHashtagPosts);
                 }
-                return PartialView("Index", myPosts.OrderByDescending(p => p.timestamp));
+                List<Post> followingPosts = new List<Post>();
+                //Get all user ids that you're following
+                List<int> userIds = currentUser.following.Select(u => u.Id).ToList();
+                //get all posts by one of those users
+                foreach (int userid in userIds)
+                {
+                    List<Post> thisUsersPosts = db.Posts.Where(p => p.creator.Id == userid).ToList();
+                    myPosts.UnionWith(thisUsersPosts);
+                }
+                List<Post> postsByMe = new List<Post>();
+                postsByMe = db.Posts.Where(p => p.creator.Id == currentUser.Id).ToList();
+                myPosts.UnionWith(postsByMe);
+
+                 switch (sort)
+            {
+                case "tag":
+                    ViewData["tags"] = db.Hashtags.ToList();
+                    return PartialView("_groupedHashtagList", myPosts);
+                case "user":
+                    ViewData["users"] = (from p in myPosts select p.creator).Distinct().ToList();
+                    return PartialView("_groupedUserList", myPosts);
+                default:
+                    return PartialView("Index", myPosts.OrderByDescending(p => p.timestamp));
             }
-           
-            
-        
-        
+            }
+            return PartialView("Index", myPosts.OrderByDescending(p => p.timestamp));
+
+        }
+
+
+
+
 
         public ActionResult Search(string query)
         {
 
             ICollection<Post> resultSet = new List<Post>();
-            
-                //if is hashtag, find all posts with such a hashtag
-                if (query[0] == '#')
+
+            //if is hashtag, find all posts with such a hashtag
+            if (query[0] == '#')
+            {
+                string hashtagString = query.Substring(1);
+                if (hashtagString == "")
                 {
-                    string hashtagString = query.Substring(1);
-                    if (hashtagString == "")
-                    {
-                        //display a list of all hashtags
-                        return PartialView("_HashtagList");
-                    }
-                    Hashtag hashtag = db.Hashtags.Where(h => h.name == hashtagString).FirstOrDefault();
-                    if (hashtag != null)
-                    {
-                        resultSet = hashtag.posts;
-                    }
-                    if (resultSet.Count == 0)
-                    {
-                        ModelState.AddModelError("emptyResultSet", "No posts match your search");
-                    }
+                    //display a list of all hashtags
+                    return PartialView("_HashtagList");
                 }
-                else
+                Hashtag hashtag = db.Hashtags.Where(h => h.name == hashtagString).FirstOrDefault();
+                if (hashtag != null)
                 {
-                    //if is not hashtag, find all posts by said user
-                    User user = db.Users.Where(u => u.UserProfile.UserName == query).FirstOrDefault();
-                    if (user != null)
-                    {
-                        resultSet = db.Posts.Where(p => p.creator.UserProfile.UserId == user.UserProfile.UserId).ToList();
-                    }
+                    resultSet = hashtag.posts;
                 }
-                ViewBag.viewIrreplaceable = true;
-            return PartialView("Index", resultSet.OrderByDescending(p=>p.timestamp));
+                if (resultSet.Count == 0)
+                {
+                    ModelState.AddModelError("emptyResultSet", "No posts match your search");
+                }
+            }
+            else
+            {
+                //if is not hashtag, find all posts by said user
+                User user = db.Users.Where(u => u.UserProfile.UserName == query).FirstOrDefault();
+                if (user != null)
+                {
+                    resultSet = db.Posts.Where(p => p.creator.UserProfile.UserId == user.UserProfile.UserId).ToList();
+                }
+            }
+            ViewBag.viewIrreplaceable = true;
+            return PartialView("Index", resultSet.OrderByDescending(p => p.timestamp));
         }
-       
+
         //
         // POST: /Post/Like/5
         public ActionResult Like(int id)
@@ -141,9 +154,9 @@ namespace Tweeter.Controllers
             }
             else
             {
-                return RedirectToAction("Login","Account");
+                return RedirectToAction("Login", "Account");
             }
-            
+
         }
 
         //
@@ -174,8 +187,8 @@ namespace Tweeter.Controllers
                     //add the hashtag if it doesn't already exist
                     if (db.Hashtags.Where(h => h.name == tag).Count() == 0)
                     {
-                         hashtag = new Hashtag { name = tag};
-                         db.Hashtags.Add(hashtag);
+                        hashtag = new Hashtag { name = tag };
+                        db.Hashtags.Add(hashtag);
                     }
                     else
                     {
@@ -186,16 +199,16 @@ namespace Tweeter.Controllers
                     hashtag.posts.Add(post);
                     //update the post's list of hashtags
                     post.hashtags.Add(hashtag);
-                    
-                    
+
+
                 }
                 post.timestamp = DateTime.Now;
                 db.Posts.Add(post);
                 db.SaveChanges();
-                return RedirectToAction("Index","Home");
+                return RedirectToAction("Index", "Home");
             }
 
-            return RedirectToAction("Index","Home");
+            return RedirectToAction("Index", "Home");
         }
         [HttpPost]
         [ValidateAntiForgeryToken]
