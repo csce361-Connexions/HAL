@@ -19,6 +19,13 @@
     @Html.Partial("_PostCreate", new Tweeter.Models.Post());
     @Html.Encode("Search by hashtag or username");
     <input type="text" id="postSearch" /><button onclick="submitSearch()">Search</button>
+    <span>
+    Order posts by
+    <a class="pointer" id="orderByTime" onclick="orderByTimeClicked()">Time</a>,
+    <a class="pointer" id="orderByTag" onclick="orderByTagClicked()">Hashtag</a>,
+    <a class="pointer" id="orderByUser" onclick="orderByUserClicked()">User</a>
+    <img src="@Href("~/Images/spinner.gif")" class="spinner" />
+</span>
     <div id="content-container">
         @Html.Action("Index", "Post")
     </div>

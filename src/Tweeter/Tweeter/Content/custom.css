@@ -21,3 +21,8 @@ a.pointer {
     height:40px;
     margin-right:5px;
 }
+img.spinner {
+    width: 16px;
+    height: 16px;
+    display:none;
+}

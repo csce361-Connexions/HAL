@@ -12,8 +12,7 @@
         tags = (int[])ViewData["myHashTags"];
     }
 }
-<a class="pointer" id="orderByTag" onclick="orderByTagClicked()">Hashtag</a><br /><br />
-<a class="pointer" id="orderByUser" onclick="orderByUserClicked()">User</a><br /><br />
+
 
 <div id="postList" class="@(viewIrreplaceable ? "irreplaceable" : "replaceable")">
     @if (!Model.Any())
@@ -32,7 +31,8 @@
     </table>
 </div>
 <script type="text/javascript">
-    var refreshInterval = window.setInterval(refreshPosts,10000)
+    var refreshInterval = window.setInterval(refreshPosts, 10000)
+    var sort = "time"
     var canRefresh = true
     function commentClicked(id) {
         canRefresh = false
@@ -40,18 +40,16 @@
         $("#commentBox" + id).show(500).find("input#postContent").focus()
     }
     function orderByUserClicked() {
-        canRefresh = false;
-        $.get("Post/Index", {sort: "user"}, function (resp) {
-            $("#content-container").empty().append(resp);
-            canRefresh = true;
-        })
+        sort = "user"
+        refreshPosts()
+    }
+    function orderByTimeClicked() {
+        sort = "time"
+        refreshPosts()
     }
     function orderByTagClicked() {
-        canRefresh = false;
-        $.get("Post/Index", { sort: "tag" }, function (resp) {
-            $("#content-container").empty().append(resp);
-            canRefresh = true;
-        })
+        sort = "tag"
+        refreshPosts()
     }
     function submitComment(id){
 
@@ -63,11 +61,15 @@
         canRefresh = true
     })
     function refreshPosts() {
-        if ($("#content-container").children(".irreplaceable").length == 0 && canRefresh){ 
+        if ($("#content-container").children(".irreplaceable").length == 0 && canRefresh) {
+            //show spinner
+            $("img.spinner").show()
             canRefresh=false;
-            $.get("Post/Index", function (resp) {
+            $.get("Post/Index", {sort: sort}, function (resp) {
                 $("#content-container").empty().append(resp);
                 canRefresh = true;
+                //hide spinner
+                $("img.spinner").hide()
             })
         }
     }
