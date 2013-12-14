@@ -35,7 +35,7 @@
        
         @foreach (var item in Model.Where(p=>p.parent == null || (!Model.Contains(p.parent))))
         {
-           
+            
                 @Html.Partial("_Post",item)
         }
     </table>
