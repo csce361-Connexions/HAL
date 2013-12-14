@@ -449,15 +449,15 @@ namespace Tweeter.Controllers
         {
             
             string url = string.Format("http://{0}/Account/Verify?guid={1}", Request.Url.Authority, recipient.verification);
-            string body = string.Format("Welcome to Tweeter! To verify your new account, follow <a href=\"{0}\">this link</a>.", url);
+            string body = string.Format("Welcome to HAL-lo! To verify your new account, follow <a href=\"{0}\">this link</a>.", url);
             //Send email
-            MailAddress from = new MailAddress("tmcclenahan0@gmail.com", "Tweeter");
+            MailAddress from = new MailAddress("tmcclenahan0@gmail.com", "HAL-lo");
             MailAddress to = new MailAddress(recipient.EmailAddress);
             MailMessage mailMessage = new MailMessage(from, to);
             mailMessage.Body = body;
 
             mailMessage.IsBodyHtml = true;
-            mailMessage.Subject = "Verify your new Tweeter account";
+            mailMessage.Subject = "Verify your new HAL-lo account";
 
             SmtpClient client = new SmtpClient();
             //client.UseDefaultCredentials = false;
