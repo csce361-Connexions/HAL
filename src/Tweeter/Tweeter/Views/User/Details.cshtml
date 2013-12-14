@@ -2,9 +2,10 @@
 
 @{
     ViewBag.Title = "Details";
+    var userName = ViewData["userName"] != null ? ViewData["userName"] : "";
 }
 
-<h2>@Model.FirstName @Model.LastName</h2>
+<h2>@Model.FirstName @Model.LastName (@userName)</h2>
 
 <fieldset>
     <legend>User</legend>
@@ -13,6 +14,10 @@
         
     <div class="display-field">
         @Html.DisplayFor(model => model.EmailAddress)
+    </div>
+    <br/>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.bio)
     </div>
 
     

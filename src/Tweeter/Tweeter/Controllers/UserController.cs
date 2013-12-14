@@ -68,6 +68,7 @@ namespace Tweeter.Controllers
                     ViewBag.followText = "Follow";
                 }
             }
+            ViewData["userName"] = user.UserProfile.UserName;
             return View(user);
         }
 
