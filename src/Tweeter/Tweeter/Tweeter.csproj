@@ -261,6 +261,11 @@
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
     <None Include="Scripts\jquery-1.8.2.intellisense.js" />
+    <Content Include="Images\Account\AladdinSane.jpg" />
+    <Content Include="Images\Account\butt.jpg" />
+    <Content Include="Images\Account\Default\default.jpg" />
+    <Content Include="Images\Account\Megatron.jpg" />
+    <Content Include="Images\Account\Thal.jpg" />
     <Content Include="Images\spinner.gif" />
     <Content Include="Scripts\jquery-1.8.2.js" />
     <Content Include="Scripts\jquery-1.8.2.min.js" />
@@ -338,7 +343,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Images\Account\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />

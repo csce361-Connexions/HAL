@@ -4,29 +4,20 @@
     ViewBag.Title = "Details";
 }
 
-<h2>Details</h2>
+<div>
+    <h2>&ldquo;@Model.postContent&rdquo;</h2><br/> - @Html.ActionLink(Model.creator.FirstName + " " + Model.creator.LastName, "Details", "User", new { id = Model.creator.Id }, null) at @Model.timestamp
+    @if (Model.parent != null)
+{
+        Tweeter.Models.User parentCreator = ViewData["parentCreator"]!=null ? (Tweeter.Models.User)ViewData["parentCreator"]:null;
+    <span>in reply to @Html.ActionLink(Model.creator.FirstName + " " + Model.creator.LastName, "Details", "User", new { id = parentCreator.Id }, null)
+        's @Html.ActionLink("Post", "Details", new{ Id=Model.parent.Id})
+    </span>
+}
+<br/>
+@Model.likers.Count @(Model.likers.Count == 1 ? "person likes this" : "people like this")<br />
+    @Html.ActionLink("Like", "Like", new { id = Model.Id })
 
-<fieldset>
-    <legend>Post</legend>
-
-    <div class="display-label">
-         @Html.DisplayNameFor(model => model.postContent)
-    </div>
-    <div class="display-field">
-        @Html.DisplayFor(model => model.postContent)
-    </div>
-</fieldset>
-<fieldset>
-    <legend>Post2</legend>
-
-    <div class="display-label">
-        @Html.DisplayNameFor(model => model.likers)
-    </div>
-    <div class="display-field">
-        @Html.DisplayFor(model => model.likers)
-    </div>
-</fieldset>
+</div>
 <p>
-    @Html.ActionLink("Edit", "Edit", new { id=Model.Id }) |
-    @Html.ActionLink("Back to List", "Index")
+    @Html.ActionLink("Back", "Index","Home")
 </p>
