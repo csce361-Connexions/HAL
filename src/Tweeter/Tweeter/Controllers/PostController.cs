@@ -105,6 +105,7 @@ namespace Tweeter.Controllers
                 }
             }
             ViewBag.viewIrreplaceable = true;
+            ViewData["fromSearch"] = true;
             return PartialView("Index", resultSet.OrderByDescending(p => p.timestamp));
         }
 

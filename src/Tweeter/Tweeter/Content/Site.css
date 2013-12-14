@@ -330,7 +330,6 @@ aside {
 
 /* login page */
 #loginForm {
-    border-right: solid 2px #c8c8c8;
     float: left;
     width: 55%;
 }
