@@ -17,8 +17,18 @@
 <div id="postList" class="@(viewIrreplaceable ? "irreplaceable" : "replaceable")">
     @if (!Model.Any())
     {
+        if (ViewData["fromSearch"] != null) { 
         <span class="message-error">Your query returned no results</span><br />
         @Html.ActionLink("Back", "Index", "Home");
+        }
+        else
+        {
+            <span>Not seeing any posts? Try following some 
+            @Html.ActionLink("users", "Index", "User")
+            or some 
+            @Html.ActionLink("hashtags", "Index", "Hashtag").
+            </span>
+        }
     }
     <table>
         @*Show a post at this level if it is not a comment, or the model does not contain the parent*@
