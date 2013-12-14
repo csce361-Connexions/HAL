@@ -6,7 +6,7 @@
 }
 @foreach (User user in users)
 {
-    <span>@user.FirstName @user.LastName</span>
+    <span class="header">@user.FirstName @user.LastName</span>
     <table>
 
         @foreach (Post post in Model.Where(p => p.creator.Id == user.Id))
